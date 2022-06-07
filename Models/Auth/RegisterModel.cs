@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WafferAPIs.Models
+namespace WafferAPIs.Models.Auth
 {
-    public class RegisterModel
+    public class AdminRegisterModel
 
     {
         [Required(ErrorMessage ="Username is required")]

@@ -1,4 +1,4 @@
-﻿namespace WafferAPIs.Models
+﻿namespace WafferAPIs.Models.Auth
 {
     public class UserRoles
     {

@@ -1,5 +1,4 @@
-using WafferAPIs.Auth;
-using WafferAPIs.Dbcontext;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,11 +12,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WafferAPIs.Models;
+using Models.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WafferAPIs.DAL.Entites;
+using WafferAPIs.DAL.Repositories;
+using WafferAPIs.Dbcontext;
 
 namespace WafferAPIs
 {
@@ -36,8 +40,28 @@ namespace WafferAPIs
 
             services.AddControllers();
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            #region  Dependency injection 
+            services.AddScoped<ISellerRepository, SellerRepository>();
+            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 
+            #endregion
+
+            #region Mapper 
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Seller, SellerData>().ReverseMap();
+
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+            #endregion
+
+            #region DataBase
+
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            #endregion
+
+            #region Authentication
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
@@ -62,7 +86,9 @@ namespace WafferAPIs
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
                 };
             });
+            #endregion
 
+            #region Swagger
 
             services.AddSwaggerGen(c =>
             {
@@ -96,17 +122,18 @@ namespace WafferAPIs
                     }
                 });
             });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WafferAPIs v1"));
-            
-            
+
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WafferAPIs v1"));
+
+
 
             app.UseRouting();
 
