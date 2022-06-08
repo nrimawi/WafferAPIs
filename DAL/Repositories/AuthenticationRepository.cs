@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WafferAPIs.Models;
 using WafferAPIs.Models.Auth;
-using WafferAPIs.Utilites;
+
 
 
 namespace WafferAPIs.DAL.Repositories
@@ -18,7 +18,7 @@ namespace WafferAPIs.DAL.Repositories
 
     public interface IAuthenticationRepository
     {
-        Task<ApplicationUser> RegisterUser(string password);
+        Task<ApplicationUser> RegisterUser(string email,string password);
         Task RegisterAdmin(AdminRegisterModel adminRegisterModel);
         Task<LoginResponse> Login(LoginModel loginModel);
     }
@@ -28,13 +28,12 @@ namespace WafferAPIs.DAL.Repositories
 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private readonly ISellerRepository _sellerRepository;
-        public AuthenticationRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ISellerRepository sellerRepository)
+     
+        public AuthenticationRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _configuration = configuration;
-            _sellerRepository = sellerRepository;
+            _configuration = configuration ;
 
         }
 
@@ -42,7 +41,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(loginModel.Username);
+                var user = await _userManager.FindByEmailAsync(loginModel.Email);
 
                 if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
                 {
@@ -67,16 +66,13 @@ namespace WafferAPIs.DAL.Repositories
                         signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
                     #endregion
 
-                    #region Finding seller
-                    var seller = await _sellerRepository.GetLoggedInSeller(user.Id);
-
-                    #endregion
-
+                   
                     #region response
                     LoginResponse response = new LoginResponse();
-                    response.Seller = seller;
+                    response.UserAuthId=user.Id;
                     response.Token = new JwtSecurityTokenHandler().WriteToken(token);
-                    var Role = _userManager.GetRolesAsync(user).Result;
+                    response.Roles = (List<string>)_userManager.GetRolesAsync(user).Result;
+                   
                     #endregion
                     return response;
 
@@ -119,12 +115,13 @@ namespace WafferAPIs.DAL.Repositories
         }
 
 
-        public async Task<ApplicationUser> RegisterUser(string password)
+        public async Task<ApplicationUser> RegisterUser(string email,string password)
         {
 
             ApplicationUser user = new()
             {
-
+                Email=email,
+                UserName =Guid.NewGuid().ToString(),    
                 SecurityStamp = Guid.NewGuid().ToString()
 
             };

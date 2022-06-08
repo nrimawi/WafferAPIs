@@ -21,6 +21,9 @@ namespace WafferAPIs.Dbcontext
                 entity.HasIndex(e => e.ContactPhoneNumber).IsUnique();
                 entity.HasIndex(e => e.CustomerServicePhoneNumber).IsUnique();
             });
+
+            base.OnModelCreating(builder);
+
         }
     }
 }

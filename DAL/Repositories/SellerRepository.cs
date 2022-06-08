@@ -37,10 +37,11 @@ namespace WafferAPIs.DAL.Repositories
         private readonly IAuthenticationRepository _authenticationRepository;
         #endregion
 
-        public SellerRepository(AppDbContext appDbContext, IMapper mapper)
+        public SellerRepository(AppDbContext appDbContext, IMapper mapper, IAuthenticationRepository authenticationRepository)
         {
             _mapper = mapper;
             _appDbContext = appDbContext;
+             _authenticationRepository = authenticationRepository;  
         }
         public async Task<SellerData> CreateSeller(SellerData sellerData)
         {
@@ -73,7 +74,7 @@ namespace WafferAPIs.DAL.Repositories
 
                 _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
                 {
-                    if (seller.Status == true) activesellers.Append(seller);
+                    if (seller.Status == true) activesellers.Add(seller);
 
                 });
                 return Task.FromResult(_mapper.Map<List<SellerData>>(activesellers));
@@ -174,7 +175,7 @@ namespace WafferAPIs.DAL.Repositories
                 #endregion
 
                 #region Generate UserAuthentication(Register new user(seller))
-                var user = _authenticationRepository.RegisterUser(password).Result;
+                var user = _authenticationRepository.RegisterUser(seller.Email,password).Result;
                 #endregion
 
                 #region updateSeller
@@ -219,7 +220,7 @@ namespace WafferAPIs.DAL.Repositories
 
                 _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
                 {
-                    if (seller.Status == true && seller.IsVerified == false) pendingSellers.Append(seller);
+                    if (seller.Status == true && seller.IsVerified == false) pendingSellers.Add(seller);
 
                 });
                 return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));
@@ -239,7 +240,7 @@ namespace WafferAPIs.DAL.Repositories
 
                 _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
                 {
-                    if (seller.Status == true && seller.IsVerified == true) pendingSellers.Append(seller);
+                    if (seller.Status == true && seller.IsVerified == true) pendingSellers.Add(seller);
 
                 });
                 return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));

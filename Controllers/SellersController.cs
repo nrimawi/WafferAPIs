@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WafferAPIs.DAL.Entites;
+using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.Models;
@@ -21,11 +22,13 @@ namespace WafferAPIs.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ISellerRepository _studentRepository;
+        private readonly IMailService _mailService;
 
-        public SellersController(AppDbContext context, ISellerRepository sellerRepository)
+        public SellersController(AppDbContext context, ISellerRepository sellerRepository, IMailService mailService)
         {
             _context = context;
             _studentRepository = sellerRepository;
+            _mailService = mailService;
         }
 
 
@@ -160,7 +163,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.GetPendingVerficationSellers());
+                return Ok(_studentRepository.GetPendingVerficationSellers().Result);
 
             }
             catch (NullReferenceException e)
@@ -196,14 +199,15 @@ namespace WafferAPIs.Controllers
         }
 
         [HttpPost("/verify-seller")]
-        public async Task<ActionResult<List<SellerData>>> VerifySeller(Guid sellerId)
+        public async Task<IActionResult> VerifySeller(Guid sellerId)
         {
 
             try
             {
-                var Generetedpassword = new RandomPasswordGenerator().Password;
-                await _studentRepository.VerifySeller(sellerId, Generetedpassword);
-                return Ok();
+                var generetedpassword = new RandomPasswordGenerator().Password + "@";
+
+                await _studentRepository.VerifySeller(sellerId, generetedpassword);
+                return Ok("Seller Verfied Successfully");
             }
             catch (NullReferenceException e)
             {
@@ -216,5 +220,22 @@ namespace WafferAPIs.Controllers
 
             }
         }
+
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMail([FromForm] MailRequest request)
+        {
+            try
+            {
+                await _mailService.SendEmailAsync(request);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
     }
+
 }
