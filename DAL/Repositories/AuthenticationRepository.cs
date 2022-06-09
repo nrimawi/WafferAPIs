@@ -18,7 +18,7 @@ namespace WafferAPIs.DAL.Repositories
 
     public interface IAuthenticationRepository
     {
-        Task<ApplicationUser> RegisterUser(string email,string password);
+        Task<ApplicationUser> RegisterUser(string email, string password);
         Task RegisterAdmin(AdminRegisterModel adminRegisterModel);
         Task<LoginResponse> Login(LoginModel loginModel);
     }
@@ -28,12 +28,12 @@ namespace WafferAPIs.DAL.Repositories
 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-     
+
         public AuthenticationRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _configuration = configuration ;
+            _configuration = configuration;
 
         }
 
@@ -66,13 +66,15 @@ namespace WafferAPIs.DAL.Repositories
                         signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
                     #endregion
 
-                   
+
                     #region response
                     LoginResponse response = new LoginResponse();
-                    response.UserAuthId=user.Id;
+                    response.UserAuthId = user.Id;
                     response.Token = new JwtSecurityTokenHandler().WriteToken(token);
                     response.Roles = (List<string>)_userManager.GetRolesAsync(user).Result;
-                   
+
+                    if (response.Roles.Contains("Admin"))
+                        response.AdminName = user.UserName;
                     #endregion
                     return response;
 
@@ -115,13 +117,13 @@ namespace WafferAPIs.DAL.Repositories
         }
 
 
-        public async Task<ApplicationUser> RegisterUser(string email,string password)
+        public async Task<ApplicationUser> RegisterUser(string email, string password)
         {
 
             ApplicationUser user = new()
             {
-                Email=email,
-                UserName =Guid.NewGuid().ToString(),    
+                Email = email,
+                UserName = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString()
 
             };

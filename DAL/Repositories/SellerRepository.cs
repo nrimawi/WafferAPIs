@@ -20,7 +20,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<SellerData> GetSellerById(Guid id);
         Task DeleteSeller(Guid id);
         Task<SellerData> UpdateSeller(Guid id, SellerData sellerData);
-        Task VerifySeller(Guid sellerId, string passowrd);
+        Task<SellerData> VerifySeller(Guid sellerId, string passowrd);
         Task<SellerData> GetLoggedInSeller(string userId);
         Task<List<SellerData>> GetPendingVerficationSellers();
         Task<List<SellerData>> GetVerifiedSellers();
@@ -41,7 +41,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             _mapper = mapper;
             _appDbContext = appDbContext;
-             _authenticationRepository = authenticationRepository;  
+            _authenticationRepository = authenticationRepository;
         }
         public async Task<SellerData> CreateSeller(SellerData sellerData)
         {
@@ -161,7 +161,7 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public async Task VerifySeller(Guid sellerId, string password)
+        public async Task<SellerData> VerifySeller(Guid sellerId, string password)
         {
             #region finding seller
             try
@@ -171,19 +171,21 @@ namespace WafferAPIs.DAL.Repositories
                 if (seller == null || seller.Status == false)
                 {
                     throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
+
                 }
+                if (seller.IsVerified)
+                    throw new Exception("Seller is already verified try to login");
                 #endregion
-
                 #region Generate UserAuthentication(Register new user(seller))
-                var user = _authenticationRepository.RegisterUser(seller.Email,password).Result;
+                var user = _authenticationRepository.RegisterUser(seller.Email, password).Result;
                 #endregion
-
                 #region updateSeller
 
                 seller.IsVerified = true;
                 seller.ApplicationUserId = user.Id;
                 _appDbContext.Update(seller);
                 await _appDbContext.SaveChangesAsync();
+                return _mapper.Map<SellerData>(seller);
                 #endregion
             }
             catch { throw; }

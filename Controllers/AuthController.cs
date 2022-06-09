@@ -23,89 +23,48 @@ namespace WafferAPIs.Controllers
     {
         private readonly ISellerRepository _sellerRepository;
         private readonly IAuthenticationRepository _authenticationRepository;
-        public AuthController(IAuthenticationRepository authenticationRepository, ISellerRepository sellerRepository )
+        public AuthController(IAuthenticationRepository authenticationRepository, ISellerRepository sellerRepository)
         {
             _sellerRepository = sellerRepository;
             _authenticationRepository = authenticationRepository;
         }
 
 
-        //[HttpPost]
-        //[Route("register")]
-        //public async Task<IActionResult> Register([FromBody] AdminRegisterModel model)
-        //{
-        //    var userExits = await _userManager.FindByNameAsync(model.Username);
-        //    if (userExits != null)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already Exists" });
-
-        //    ApplicationUser user = new()
-        //    {
-        //        Email = model.Email,
-        //        SecurityStamp = Guid.NewGuid().ToString(),
-        //        UserName = model.Username,
-        //    };
 
 
+        [HttpPost]
+        [Route("register-admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegisterModel model)
+        {
+            try
+            {
+                await _authenticationRepository.RegisterAdmin(model);
+                return Ok(new Response { Status = "Success", Message = "User created sucessfully" });
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
 
-        //    var result = await _userManager.CreateAsync(user, model.Password);
-        //    if (!result.Succeeded)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed due to" + result.ToString() });
-
-
-
-        //    if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-        //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-
-
-        //    if (await _roleManager.RoleExistsAsync(UserRoles.User))
-        //        await _userManager.AddToRoleAsync(user, UserRoles.User);
-
-
-
-        //    return Ok(new Response { Status = "Success", Message = "User created sucessfully" });
-        //}
-
-
-        //[HttpPost]
-        //[Route("register-admin")]
-        //public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegisterModel model)
-        //{
-        //    var userExits = await _userManager.FindByNameAsync(model.Username);
-        //    if (userExits != null)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already Exists" });
-
-        //    ApplicationUser user = new()
-        //    {
-        //        Email = model.Email,
-        //        SecurityStamp = Guid.NewGuid().ToString(),
-        //        UserName = model.Username,
-        //    };
-
-        //    var result = await _userManager.CreateAsync(user, model.Password);
-        //    if (!result.Succeeded)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed" + result.ToString() });
-
-
-        //    if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-
-
-
-        //    if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-
-        //    return Ok(new Response { Status = "Success", Message = "User created sucessfully" });
-        //}
+        }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+            //In this method there a conflect in return data
+            //When Admin is logged in , we need to return its name 
+            //When seller we need to return its data
             try
-            {   
-                var res= await _authenticationRepository.Login(model);
-               var seller= await _sellerRepository.GetLoggedInSeller(res.UserAuthId) ;
-                res.Seller = seller ;
+            {
+                var res = await _authenticationRepository.Login(model);
+
+                if (res.Roles.Contains("Admin"))
+                {
+                    res.UserAuthId = "";
+
+                    return Ok(res);
+                }
+                var seller = await _sellerRepository.GetLoggedInSeller(res.UserAuthId);
+                res.Seller = seller;
+                res.AdminName = "";
                 res.UserAuthId = "";
                 return Ok(res);
 

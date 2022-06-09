@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Helpers.EmailAPI;
+using WafferAPIs.DAL.Helpers.EmailAPI.Model;
 using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.Models;
@@ -15,7 +16,7 @@ using WafferAPIs.Utilites;
 
 namespace WafferAPIs.Controllers
 {
-
+    [Authorize(Roles = "Admin")]
     [Route("api/sellers")]
     [ApiController]
     public class SellersController : ControllerBase
@@ -139,31 +140,13 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        //[HttpPost("/logged-in-seller/{userAuthenticationId}")]
-        //public async Task<ActionResult<SellerData>> GetLoggedInSeller(Guid userAuthenticationId)
-        //{
-        //    try
-        //    {
-        //        return Ok(await _studentRepository.GetLoggedInSeller(userAuthenticationId));
-        //    }
-        //    catch (NullReferenceException e)
-        //    {
-        //        return NotFound(e.Message);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-
-        //    }
-        //}
 
         [HttpGet("/pending-sellers")]
-        public async Task<ActionResult<List<SellerData>>> GetPendingVeificationSellers()
+        public async Task<ActionResult<List<SellerData>>> GetPendingVerificationSellers()
         {
             try
             {
-                return Ok(_studentRepository.GetPendingVerficationSellers().Result);
+                return Ok(await _studentRepository.GetPendingVerficationSellers());
 
             }
             catch (NullReferenceException e)
@@ -204,10 +187,23 @@ namespace WafferAPIs.Controllers
 
             try
             {
-                var generetedpassword = new RandomPasswordGenerator().Password + "@";
+                var generetedpassword = "W" + new RandomPasswordGenerator().Password + "@";
 
-                await _studentRepository.VerifySeller(sellerId, generetedpassword);
-                return Ok("Seller Verfied Successfully");
+                var seller = await _studentRepository.VerifySeller(sellerId, generetedpassword);
+
+                WelcomeRequest request = new WelcomeRequest();
+                request.Email = seller.Email;
+                request.Name = seller.Name;
+                request.Link = "www.google.com";
+                request.Password = generetedpassword;
+
+                try
+                {
+                    await _mailService.SendWelcomeEmailAsync(request);
+                }
+                catch (Exception e) { throw new Exception("User verified but Error while sending email"); }
+
+                return Ok("Seller has been verfied successfully and email has been sent");
             }
             catch (NullReferenceException e)
             {
@@ -222,20 +218,20 @@ namespace WafferAPIs.Controllers
         }
 
 
-        [HttpPost("send")]
-        public async Task<IActionResult> SendMail([FromForm] MailRequest request)
-        {
-            try
-            {
-                await _mailService.SendEmailAsync(request);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+        //    [HttpPost("send")]
+        //    public async Task<IActionResult> SendMail([FromForm] MailRequest request)
+        //    {
+        //        try
+        //        {
+        //            await _mailService.SendEmailAsync(request);
+        //            return Ok();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw;
+        //        }
 
-        }
+        //    }
+        //}
     }
-
 }
