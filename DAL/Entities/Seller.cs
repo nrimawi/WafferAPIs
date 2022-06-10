@@ -7,6 +7,7 @@ namespace WafferAPIs.DAL.Entites
     public class Seller
     {
 
+
         [Key]
         public Guid Id { get; set; }
 
@@ -24,6 +25,7 @@ namespace WafferAPIs.DAL.Entites
         public String ContactPhoneNumber { get; set; }
         public String CustomerServicePhoneNumber { get; set; }
 
+
         [Required]
         public Boolean HasStore { get; set; }
 
@@ -39,6 +41,10 @@ namespace WafferAPIs.DAL.Entites
         public string ApplicationUserId { get; set; }
 
 
+
+        public string Logo { get; set; }
+        public string WebsiteLink { get; set; }
+        public string SocailMedaLink { get; set; }
     }
 
 }

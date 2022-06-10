@@ -25,6 +25,9 @@ namespace WafferAPIs.Models
 
         [Required(ErrorMessage = "Address is required")]
         public String Address { get; set; }
+
+
+
     }
 }
 
