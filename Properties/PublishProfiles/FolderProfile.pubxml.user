@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\nazee\Desktop\Deploy\Email+Seller</_PublishTargetUrl>
+    <History>True|2022-06-09T00:28:48.5173179Z;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=SQL8002.site4now.net%3bInitial Catalog=db_a8813c_waffer%3bUser Id=db_a8813c_waffer_admin%3bPassword=rimawi123</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
+using WafferAPIs.DAL.Helpers.EmailAPI.Service;
+using WafferAPIs.DAL.Helpers.SMSAPI;
+using WafferAPIs.DAL.Helpers.SMSAPI.Model;
 using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.Models;
@@ -16,20 +19,22 @@ using WafferAPIs.Utilites;
 
 namespace WafferAPIs.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     [Route("api/sellers")]
     [ApiController]
     public class SellersController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly ISellerRepository _studentRepository;
-        private readonly IMailService _mailService;
-
-        public SellersController(AppDbContext context, ISellerRepository sellerRepository, IMailService mailService)
+        //  private readonly IMailService _mailService;
+        private readonly IEmailSender _emailSender;
+        private readonly ISMSSender _smsSender;
+        public SellersController(AppDbContext context, ISellerRepository sellerRepository, IEmailSender emailSender, ISMSSender smsSender)
         {
             _context = context;
             _studentRepository = sellerRepository;
-            _mailService = mailService;
+            _emailSender = emailSender;
+            _smsSender = smsSender;
         }
 
 
@@ -189,21 +194,47 @@ namespace WafferAPIs.Controllers
             {
                 var generetedpassword = "W" + new RandomPasswordGenerator().Password + "@";
 
-                var seller = await _studentRepository.VerifySeller(sellerId, generetedpassword);
+                #region verify seller
+                SellerData seller;
+                try
+                {
+                    seller = await _studentRepository.VerifySeller(sellerId, generetedpassword);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error at verifying user due to " + ex.Message);
 
-                WelcomeRequest request = new WelcomeRequest();
-                request.Email = seller.Email;
-                request.Name = seller.Name;
-                request.Link = "www.google.com";
-                request.Password = generetedpassword;
+                }
+                #endregion
+                #region Create email data and send req
+                MailReqestData emailRequest = new MailReqestData();
+                emailRequest.ToEmail = seller.Email;
+                emailRequest.Subject = "Waffer - Activate your account";
+                emailRequest.Name = seller.Name;
+                emailRequest.Link = "https://www.youtube.com/watch?v=Ik_OFtkTGtY&list=RDYhylTnTvBow&index=2";
+                emailRequest.Password = generetedpassword;
+
 
                 try
                 {
-                    await _mailService.SendWelcomeEmailAsync(request);
+                    await _emailSender.SendEmailAsync(emailRequest);
                 }
-                catch (Exception e) { throw new Exception("User verified but Error while sending email"); }
+                catch (Exception e) { throw new Exception("User verified but error while sending email due to " + e.Message); }
+                #endregion
+                #region Create sms data and send req
+                SMSRequestData smsRequest = new SMSRequestData();
+                smsRequest.NameToShow = "WafferServices";
+                smsRequest.Message = "أهلاً بك في موقع وفر";
+                smsRequest.Number = "+972" + seller.ContactPhoneNumber.ToString();
 
-                return Ok("Seller has been verfied successfully and email has been sent");
+                try
+                {
+                    //       await _smsSender.SendSMSAsync(smsRequest);
+                }
+                catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
+                #endregion
+
+                return Ok("Seller has been verfied successfully, email has been sent and sms has been sent ");
             }
             catch (NullReferenceException e)
             {
@@ -216,22 +247,30 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
-
-        //    [HttpPost("send")]
-        //    public async Task<IActionResult> SendMail([FromForm] MailRequest request)
-        //    {
-        //        try
-        //        {
-        //            await _mailService.SendEmailAsync(request);
-        //            return Ok();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw;
-        //        }
-
-        //    }
-        //}
     }
 }
+
+
+//        [HttpPost("send")]
+//        public async Task<IActionResult> SendMail([FromForm] WelcomeRequest request)
+//        {
+//            try
+//            {
+//                request.Email = "nazeehRimawi";
+//                request.Password = "sdsdsdsds";
+//                request.Link = "sdsdsdsd";
+//                request.Name = "tets";
+
+//                await _emailSender.SendEmailAsync(request);
+//                return Ok();
+//            }
+//            catch (Exception ex)
+//            {
+//                throw;
+//            }
+
+//        }
+
+
+//}
+//}

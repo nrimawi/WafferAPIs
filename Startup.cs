@@ -24,6 +24,9 @@ using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
 using WafferAPIs.DAL.Helpers.EmailAPI;
+using WafferAPIs.DAL.Helpers.EmailAPI.Service;
+using WafferAPIs.DAL.Helpers.SMSAPI.Model;
+using WafferAPIs.DAL.Helpers.SMSAPI;
 
 namespace WafferAPIs
 {
@@ -62,9 +65,16 @@ namespace WafferAPIs
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             #endregion
+
+            #region SMS service
+            services.Configure<SMSSettings>(Configuration.GetSection("SMSSettings"));
+            services.AddScoped<ISMSSender, SMSSender>();
+            #endregion
+
             #region Email service
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<IMailService, MailService>();
+            ///   services.AddTransient<IMailService, MailService>();
+            services.AddScoped<IEmailSender, EmailSender>();
             #endregion
 
             #region Authentication
