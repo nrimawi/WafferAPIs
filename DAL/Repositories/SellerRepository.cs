@@ -65,19 +65,12 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
-        public Task<List<SellerData>> GetSellers()
+        public async Task<List<SellerData>> GetSellers()
         {
             try
             {
-                List<Seller> activesellers = new List<Seller>();
-
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
-                {
-                    if (seller.Status == true) activesellers.Add(seller);
-
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(activesellers));
+                var activeSellers = await _appDbContext.Sellers.Where(s => s.Status == true).ToListAsync();
+                return _mapper.Map<List<SellerData>>(activeSellers);
             }
             catch
             {
@@ -91,11 +84,11 @@ namespace WafferAPIs.DAL.Repositories
             {
 
 
-                Seller seller = await _appDbContext.Sellers.FindAsync(id);
+                Seller seller = await _appDbContext.Sellers.Where(s => s.Id == id && s.Status == true).FirstOrDefaultAsync();
 
-                if (seller == null || seller.Status == false)
+                if (seller == null)
                 {
-                    throw new NullReferenceException("Seller with id=" + id + " is not found");
+                    throw new NullReferenceException("SubCategory with id=" + id + " is not found");
                 }
                 return _mapper.Map<SellerData>(seller);
             }
@@ -139,8 +132,7 @@ namespace WafferAPIs.DAL.Repositories
 
         public async Task DeleteSeller(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException("id");
+
             try
             {
 
@@ -173,8 +165,8 @@ namespace WafferAPIs.DAL.Repositories
                     throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
 
                 }
-                //if (seller.IsVerified)
-                //    throw new Exception("Seller is already verified try to login");
+                if (seller.IsVerified)
+                    throw new Exception("Seller is already verified try to login");
                 #endregion
                 #region Generate UserAuthentication(Register new user(seller))
                 var user = _authenticationRepository.RegisterUser(seller.Email, password).Result;

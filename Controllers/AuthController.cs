@@ -69,7 +69,7 @@ namespace WafferAPIs.Controllers
                 return Ok(res);
 
             }
-            catch (Exception ex)
+            catch
             {
 
                 return Unauthorized();

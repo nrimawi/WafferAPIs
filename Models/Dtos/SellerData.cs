@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WafferAPIs.Models
@@ -6,6 +7,7 @@ namespace WafferAPIs.Models
     public class SellerData
     {
         public Guid Id { get; set; }
+
         [Required(ErrorMessage = "Name is required")]
         public String Name { get; set; }
 
@@ -15,6 +17,7 @@ namespace WafferAPIs.Models
 
         [Required(ErrorMessage = "Description is required")]
         public String Description { get; set; }
+
         [Required(ErrorMessage = "ContactPhoneNumber is required")]
         public String ContactPhoneNumber { get; set; }
 

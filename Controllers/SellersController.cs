@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,20 +20,18 @@ using WafferAPIs.Utilites;
 
 namespace WafferAPIs.Controllers
 {
+
     // [Authorize(Roles = "Admin")]
     [Route("api/sellers")]
     [ApiController]
     public class SellersController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly ISellerRepository _studentRepository;
-        //  private readonly IMailService _mailService;
+        private readonly ISellerRepository _sellerRepository;
         private readonly IEmailSender _emailSender;
         private readonly ISMSSender _smsSender;
-        public SellersController(AppDbContext context, ISellerRepository sellerRepository, IEmailSender emailSender, ISMSSender smsSender)
+        public SellersController(ISellerRepository sellerRepository, IEmailSender emailSender, ISMSSender smsSender)
         {
-            _context = context;
-            _studentRepository = sellerRepository;
+            _sellerRepository = sellerRepository;
             _emailSender = emailSender;
             _smsSender = smsSender;
         }
@@ -43,7 +42,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.GetSellers());
+                return Ok(await _sellerRepository.GetSellers());
 
             }
             catch (NullReferenceException e)
@@ -64,7 +63,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.GetSellerById(id));
+                return Ok(await _sellerRepository.GetSellerById(id));
             }
             catch (NullReferenceException e)
             {
@@ -83,7 +82,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.UpdateSeller(id, sellerData));
+                return Ok(await _sellerRepository.UpdateSeller(id, sellerData));
 
             }
             catch (NullReferenceException e)
@@ -105,7 +104,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                SellerData createdSeller = await _studentRepository.CreateSeller(sellerData);
+                SellerData createdSeller = await _sellerRepository.CreateSeller(sellerData);
 
 
                 return CreatedAtAction("GetSeller", new { id = createdSeller.Id }, createdSeller);
@@ -129,8 +128,8 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                await _studentRepository.DeleteSeller(id);
-                return Ok();
+                await _sellerRepository.DeleteSeller(id);
+                return Ok("Deleted Sucsessfully");
 
             }
             catch (NullReferenceException e)
@@ -151,7 +150,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.GetPendingVerficationSellers());
+                return Ok(await _sellerRepository.GetPendingVerficationSellers());
 
             }
             catch (NullReferenceException e)
@@ -171,7 +170,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                return Ok(await _studentRepository.GetVerifiedSellers());
+                return Ok(await _sellerRepository.GetVerifiedSellers());
 
             }
             catch (NullReferenceException e)
@@ -198,7 +197,7 @@ namespace WafferAPIs.Controllers
                 SellerData seller;
                 try
                 {
-                    seller = await _studentRepository.VerifySeller(sellerId, generetedpassword);
+                    seller = await _sellerRepository.VerifySeller(sellerId, generetedpassword);
                 }
                 catch (Exception ex)
                 {
@@ -250,27 +249,3 @@ namespace WafferAPIs.Controllers
     }
 }
 
-
-//        [HttpPost("send")]
-//        public async Task<IActionResult> SendMail([FromForm] WelcomeRequest request)
-//        {
-//            try
-//            {
-//                request.Email = "nazeehRimawi";
-//                request.Password = "sdsdsdsds";
-//                request.Link = "sdsdsdsd";
-//                request.Name = "tets";
-
-//                await _emailSender.SendEmailAsync(request);
-//                return Ok();
-//            }
-//            catch (Exception ex)
-//            {
-//                throw;
-//            }
-
-//        }
-
-
-//}
-//}

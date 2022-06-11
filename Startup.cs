@@ -27,6 +27,9 @@ using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Service;
 using WafferAPIs.DAL.Helpers.SMSAPI.Model;
 using WafferAPIs.DAL.Helpers.SMSAPI;
+using WafferAPIs.Models.Dtos;
+using WafferAPIs.DAL.Entities;
+using WafferAPIs.Utilites;
 
 namespace WafferAPIs
 {
@@ -48,6 +51,9 @@ namespace WafferAPIs
             #region  Dependency injection 
             services.AddScoped<ISellerRepository, SellerRepository>();
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+
 
             #endregion
 
@@ -55,6 +61,12 @@ namespace WafferAPIs
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Seller, SellerData>().ReverseMap();
+                cfg.CreateMap<Category, CategoryData>().ReverseMap();
+
+                cfg.CreateMap<SubCategory, SubCategoryData>().ForMember(dest =>
+                dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToDto(src.Fetures)));
+                cfg.CreateMap<SubCategoryData, SubCategory>().ForMember(dest =>
+                dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToEntity(src.Fetures)));
 
             });
             var mapper = config.CreateMapper();
@@ -104,8 +116,29 @@ namespace WafferAPIs
             });
             #endregion
 
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
             #region Swagger
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "Authentaication and Authoraization in .NET core 5 & " });
@@ -155,6 +188,15 @@ namespace WafferAPIs
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseEndpoints(endpoints =>
             {

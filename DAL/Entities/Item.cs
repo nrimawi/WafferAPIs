@@ -17,7 +17,7 @@ namespace WafferAPIs.DAL.Entities
         public string Color { get; set; }
 
         [Required]
-        public Dimensions Dimensions { get; set; }
+        public string Dimensions { get; set; }
 
         public double Weight { get; set; }
 
