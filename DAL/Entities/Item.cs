@@ -40,7 +40,15 @@ namespace WafferAPIs.DAL.Entities
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
 
+        public Guid SubCategoryId { get; set; }
+        public SubCategory SubCategory { get; set; }
+
         public Guid SellerId { get; set; }
         public Seller Seller { get; set; }
+
+        //Vacuum Cleaners
+        public Boolean WorkOnBattery { get; set; }
+
+
     }
 }

@@ -165,7 +165,7 @@ namespace WafferAPIs.DAL.Repositories
                     throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
 
                 }
-                if (seller.IsVerified)
+                if (!seller.IsVerified)
                     throw new Exception("Seller is already verified try to login");
                 #endregion
                 #region Generate UserAuthentication(Register new user(seller))

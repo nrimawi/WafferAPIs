@@ -191,13 +191,13 @@ namespace WafferAPIs.Controllers
 
             try
             {
-                var generetedpassword = "W" + new RandomPasswordGenerator().Password + "@";
+                var password = "W" + new RandomPasswordGenerator().Password + "@";
 
                 #region verify seller
                 SellerData seller;
                 try
                 {
-                    seller = await _sellerRepository.VerifySeller(sellerId, generetedpassword);
+                    seller = await _sellerRepository.VerifySeller(sellerId, password);
                 }
                 catch (Exception ex)
                 {
@@ -211,7 +211,7 @@ namespace WafferAPIs.Controllers
                 emailRequest.Subject = "Waffer - Activate your account";
                 emailRequest.Name = seller.Name;
                 emailRequest.Link = "https://www.youtube.com/watch?v=Ik_OFtkTGtY&list=RDYhylTnTvBow&index=2";
-                emailRequest.Password = generetedpassword;
+                emailRequest.Password = password;
 
 
                 try
@@ -222,13 +222,16 @@ namespace WafferAPIs.Controllers
                 #endregion
                 #region Create sms data and send req
                 SMSRequestData smsRequest = new SMSRequestData();
-                smsRequest.NameToShow = "WafferServices";
-                smsRequest.Message = "أهلاً بك في موقع وفر";
-                smsRequest.Number = "+972" + seller.ContactPhoneNumber.ToString();
+                smsRequest.From = "MJPilot";
+                //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
+                smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
+
+
+                smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);
 
                 try
                 {
-                    //       await _smsSender.SendSMSAsync(smsRequest);
+                    await _smsSender.SendSMSAsync(smsRequest);
                 }
                 catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
                 #endregion
@@ -246,6 +249,10 @@ namespace WafferAPIs.Controllers
 
             }
         }
+
     }
+
+
+
 }
 
