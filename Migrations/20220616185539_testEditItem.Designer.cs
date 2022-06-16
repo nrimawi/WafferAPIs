@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WafferAPIs.Dbcontext;
 
 namespace WafferAPIs.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220616185539_testEditItem")]
+    partial class testEditItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,6 +333,9 @@ namespace WafferAPIs.Migrations
                     b.Property<int?>("Capacity")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool?>("ChildLock")
                         .HasColumnType("bit");
 
@@ -486,6 +491,8 @@ namespace WafferAPIs.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("SellerId");
 
                     b.HasIndex("SubCategoryId");
@@ -578,6 +585,12 @@ namespace WafferAPIs.Migrations
 
             modelBuilder.Entity("WafferAPIs.DAL.Entities.Item", b =>
                 {
+                    b.HasOne("WafferAPIs.DAL.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WafferAPIs.DAL.Entites.Seller", "Seller")
                         .WithMany("Items")
                         .HasForeignKey("SellerId")
@@ -589,6 +602,8 @@ namespace WafferAPIs.Migrations
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Seller");
 

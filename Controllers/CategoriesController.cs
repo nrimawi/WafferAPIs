@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WafferAPIs.DAL.Entites;
+using WafferAPIs.DAL.Entities;
 using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
 using WafferAPIs.DAL.Helpers.EmailAPI.Service;
@@ -144,6 +147,10 @@ namespace WafferAPIs.Controllers
 
 
     }
+
 }
+
+
+
 
 

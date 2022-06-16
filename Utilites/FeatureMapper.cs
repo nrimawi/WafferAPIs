@@ -16,18 +16,21 @@ namespace WafferAPIs.Utilites
                 foreach (string feature in text.Split(','))
                 {
                     int index = 0;
-                    SubCategoryFeature subCategoryFeature = new SubCategoryFeature();
+                    string codeName = "";
+                    string type = "";
 
                     foreach (string featureElement in feature.Split(':'))
                     {
 
                         if (index == 0)
-                            subCategoryFeature.Name = featureElement;
+                            codeName=featureElement;
 
-                        else
-                            subCategoryFeature.Type = featureElement;
+                        else 
+                            type= featureElement;
+
                         index++;
                     }
+                    SubCategoryFeature subCategoryFeature = new SubCategoryFeature(codeName, type);
                     res.Add(subCategoryFeature);
 
                 }
@@ -50,9 +53,9 @@ namespace WafferAPIs.Utilites
                 foreach (SubCategoryFeature feature in features)
                 {
                     if (index == 0)
-                        res = feature.Name + ":" + feature.Type;
+                        res = feature.CodeName + ":" + feature.Type;
                     else
-                        res = res + "," + feature.Name + ":" + feature.Type;
+                        res = res + "," + feature.CodeName + ":" + feature.Type;
 
 
                     index++;

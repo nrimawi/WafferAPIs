@@ -25,7 +25,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<List<SubCategoryData>> GetSubCategoriesByCategoryId(Guid categoryId);
         Task AddFeaturesToSubCategory(Guid subCategoryId, List<SubCategoryFeature> features);
         Task UpdateSubCategoryFeatures(Guid subCategoryId, List<SubCategoryFeature> features);
-
+        Task<List<SubCategoryFeature>> GetSubCategoryFeatures(Guid subCategoryId);
 
     }
 
@@ -162,7 +162,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             try
             {
-                var activeSubCategories = await _appDbContext.SubCategories.Where(subCategory => subCategory.Status == true && subCategory.CategoryId==categoryId).Include(c => c.Category).ToListAsync();
+                var activeSubCategories = await _appDbContext.SubCategories.Where(subCategory => subCategory.Status == true && subCategory.CategoryId == categoryId).Include(c => c.Category).ToListAsync();
                 return _mapper.Map<List<SubCategoryData>>(activeSubCategories);
             }
             catch
@@ -186,9 +186,9 @@ namespace WafferAPIs.DAL.Repositories
                 foreach (var feature in features)
                 {
                     if (SubCategory.Fetures == "")
-                        SubCategory.Fetures = feature.Name + ":" + feature.Type;
+                        SubCategory.Fetures = feature.CodeName + ":" + feature.Type;
                     else
-                        SubCategory.Fetures = SubCategory.Fetures + "," + feature.Name + ":" + feature.Type;
+                        SubCategory.Fetures = SubCategory.Fetures + "," + feature.CodeName + ":" + feature.Type;
                 }
                 _appDbContext.SubCategories.Update(SubCategory);
                 await _appDbContext.SaveChangesAsync();
@@ -223,6 +223,28 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
+
+        public async Task<List<SubCategoryFeature>> GetSubCategoryFeatures(Guid subCategoryId)
+        {
+            try
+            {
+
+                SubCategory SubCategory = await _appDbContext.SubCategories.FindAsync(subCategoryId);
+
+                if (SubCategory == null || SubCategory.Status == false)
+                {
+                    throw new Exception("SubCategory with id=" + subCategoryId + " is not found");
+                }
+
+
+                return new FeatureMapper().ToDto(SubCategory.Fetures);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
     }
 }

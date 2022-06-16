@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
@@ -35,6 +36,7 @@ namespace WafferAPIs.Controllers
 
         }
 
+        [SwaggerOperation(Summary = "Get all subCategories")]
 
         [HttpGet]
         public async Task<ActionResult<List<SubCategoryData>>> GetSubCategories()
@@ -46,15 +48,17 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }
+
+        [SwaggerOperation(Summary = "Get subCategory")]
 
 
         [HttpGet("{id}")]
@@ -66,15 +70,16 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }
+        [SwaggerOperation(Summary = "Update subCategory")]
 
         [HttpPut("{id}")]
         public async Task<ActionResult<SubCategoryData>> PutSubCategory(Guid id, SubCategoryData SubCategoryData)
@@ -86,17 +91,18 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
 
         }
 
+        [SwaggerOperation(Summary = "Create new subCategory")]
 
         [HttpPost]
         public async Task<ActionResult<SubCategoryData>> PostSubCategory(SubCategoryData SubCategoryData)
@@ -111,16 +117,18 @@ namespace WafferAPIs.Controllers
 
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }
 
+
+        [SwaggerOperation(Summary = "Delete subCategory")]
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubCategory(Guid id)
@@ -133,16 +141,18 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }
 
+
+        [SwaggerOperation(Summary = " Get subCategories by categoryId")]
         [HttpGet("/categoryId/{id}")]
         public async Task<ActionResult<SubCategoryData>> GetSubCategoriesByCategoryId(Guid id)
         {
@@ -164,6 +174,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Add feature/s at existing subcategory features")]
         [HttpPatch("/addFeatures/{id}")]
         public async Task<IActionResult> AddFeaturesToSubCategory(Guid id, List<SubCategoryFeature> features)
         {
@@ -176,17 +187,17 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }
 
-
+        [SwaggerOperation(Summary = "Update subCategory features")]
         [HttpPut("/UpdateFeatures/{id}")]
         public async Task<IActionResult> UpdateSubCategoryFeatures(Guid id, List<SubCategoryFeature> features)
         {
@@ -199,12 +210,35 @@ namespace WafferAPIs.Controllers
             }
             catch (NullReferenceException e)
             {
-                return NotFound(e.Message);
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
+
+        [SwaggerOperation(Summary = "Get features for specific subCategory")]
+        [HttpGet("/GetFeatures/{id}")]
+        public async Task<ActionResult<List<SubCategoryFeature>>> GetSubCategoryFeatures(Guid id)
+        {
+
+            try
+            {
+
+                return Ok(await _SubCategoryRepository.GetSubCategoryFeatures(id));
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
 
             }
         }

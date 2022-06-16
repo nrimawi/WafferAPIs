@@ -12,6 +12,7 @@ namespace WafferAPIs.Dbcontext
         public DbSet<Seller> Sellers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -28,7 +29,7 @@ namespace WafferAPIs.Dbcontext
             builder.Entity<Category>(entity =>
             {
                 entity.HasIndex(e => e.Name).IsUnique();
-               
+
             });
             builder.Entity<SubCategory>(entity =>
             {

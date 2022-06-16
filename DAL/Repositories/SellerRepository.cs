@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.Dbcontext;
+using WafferAPIs.DAL.Entities;
 
 namespace WafferAPIs.DAL.Repositories
 {
@@ -24,7 +25,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<SellerData> GetLoggedInSeller(string userId);
         Task<List<SellerData>> GetPendingVerficationSellers();
         Task<List<SellerData>> GetVerifiedSellers();
-
+        Task<List<ItemData>> GetSellerItems(Guid sellerId);
 
     }
 
@@ -205,19 +206,27 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public Task<List<SellerData>> GetPendingVerficationSellers()
+        public async Task<List<SellerData>> GetPendingVerficationSellers()
+        {
+
+            try
+            {
+                var pendingSellers = await _appDbContext.Sellers.Where(s => s.Status == true && s.IsVerified == false).ToListAsync();
+                return _mapper.Map<List<SellerData>>(pendingSellers);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<List<SellerData>> GetVerifiedSellers()
         {
             try
             {
-                List<Seller> pendingSellers = new List<Seller>();
-
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
-                {
-                    if (seller.Status == true && seller.IsVerified == false) pendingSellers.Add(seller);
-
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));
+                var pendingSellers = await _appDbContext.Sellers.Where(s => s.Status == true && s.IsVerified == true).ToListAsync();
+                return _mapper.Map<List<SellerData>>(pendingSellers);
             }
             catch
             {
@@ -225,26 +234,26 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public Task<List<SellerData>> GetVerifiedSellers()
+        public Task<List<ItemData>> GetSellerItems(Guid sellerId)
         {
+            List<ItemData> itemData = new List<ItemData>();
             try
             {
-                List<Seller> pendingSellers = new List<Seller>();
-
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
+                var query = from sellers in _appDbContext.Sellers
+                            join item in _appDbContext.Items on sellerId equals item.SellerId
+                            select item;
+                foreach (var item in query)
                 {
-                    if (seller.Status == true && seller.IsVerified == true) pendingSellers.Add(seller);
+                    itemData.Add(_mapper.Map<ItemData>(item)); ;
+                
+                    }
 
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));
+                return Task.FromResult(itemData);
             }
             catch
             {
                 throw;
             }
         }
-
-
     }
 }

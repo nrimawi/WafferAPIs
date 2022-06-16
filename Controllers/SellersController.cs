@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
@@ -38,6 +39,7 @@ namespace WafferAPIs.Controllers
 
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all sellers")]
         public async Task<ActionResult<List<SellerData>>> GetSellers()
         {
             try
@@ -57,7 +59,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Get seller by id")]
         [HttpGet("{id}")]
         public async Task<ActionResult<SellerData>> GetSeller(Guid id)
         {
@@ -77,6 +79,28 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [HttpGet("{id}/items")]
+        [SwaggerOperation(Summary = "Get all items for specific seller")]
+
+        public async Task<ActionResult<SellerData>> GetSellerItems(Guid id)
+        {
+            try
+            {
+                return Ok(await _sellerRepository.GetSellerItems(id));
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        [SwaggerOperation(Summary = "Update seller")]
         [HttpPut("{id}")]
         public async Task<ActionResult<SellerData>> PutSeller(Guid id, SellerData sellerData)
         {
@@ -98,7 +122,7 @@ namespace WafferAPIs.Controllers
 
         }
 
-
+        [SwaggerOperation(Summary = "Create new seller")]
         [HttpPost]
         public async Task<ActionResult<SellerData>> PostSeller(SellerData sellerData)
         {
@@ -122,7 +146,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Delete seller")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSeller(Guid id)
         {
@@ -145,6 +169,7 @@ namespace WafferAPIs.Controllers
         }
 
 
+        [SwaggerOperation(Summary = "Get pending for verfication sellers")]
         [HttpGet("/pending-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetPendingVerificationSellers()
         {
@@ -165,6 +190,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Get verified sellers")]
         [HttpGet("/verified-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetVerifiedSellers()
         {
@@ -185,6 +211,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Verify seller then send sms & email with password")]
         [HttpPost("/verify-seller")]
         public async Task<IActionResult> VerifySeller(Guid sellerId)
         {

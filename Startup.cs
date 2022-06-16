@@ -30,6 +30,8 @@ using WafferAPIs.DAL.Helpers.SMSAPI;
 using WafferAPIs.Models.Dtos;
 using WafferAPIs.DAL.Entities;
 using WafferAPIs.Utilites;
+using System.Reflection;
+using System.IO;
 
 namespace WafferAPIs
 {
@@ -53,6 +55,7 @@ namespace WafferAPIs
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
 
 
             #endregion
@@ -62,11 +65,14 @@ namespace WafferAPIs
             {
                 cfg.CreateMap<Seller, SellerData>().ReverseMap();
                 cfg.CreateMap<Category, CategoryData>().ReverseMap();
+                cfg.CreateMap<Item, ItemData>().ReverseMap();
+
 
                 cfg.CreateMap<SubCategory, SubCategoryData>().ForMember(dest =>
                 dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToDto(src.Fetures)));
                 cfg.CreateMap<SubCategoryData, SubCategory>().ForMember(dest =>
                 dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToEntity(src.Fetures)));
+
 
             });
             var mapper = config.CreateMapper();
@@ -141,6 +147,7 @@ namespace WafferAPIs
             });
             services.AddSwaggerGen(c =>
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "Authentaication and Authoraization in .NET core 5 & " });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -170,6 +177,10 @@ namespace WafferAPIs
                         }
                     }
                 });
+              
+
+
+
             });
             #endregion
         }
