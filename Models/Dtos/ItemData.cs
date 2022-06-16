@@ -45,10 +45,6 @@ namespace WafferAPIs.DAL.Entities
         [Required(ErrorMessage = "SellerId Should be filled")]
         public Guid SellerId { get; set; }
 
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public DateTime? CreatedDate { get; set; }
-
         //Vacuum Cleaners
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? WorkOnBattery { get; set; }

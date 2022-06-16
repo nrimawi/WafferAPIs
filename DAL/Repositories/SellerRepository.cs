@@ -25,7 +25,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<SellerData> GetLoggedInSeller(string userId);
         Task<List<SellerData>> GetPendingVerficationSellers();
         Task<List<SellerData>> GetVerifiedSellers();
-        Task<List<ItemData>> GetSellerItems(Guid sellerId);
+      
 
     }
 
@@ -226,6 +226,10 @@ namespace WafferAPIs.DAL.Repositories
             try
             {
                 var pendingSellers = await _appDbContext.Sellers.Where(s => s.Status == true && s.IsVerified == true).ToListAsync();
+                if (pendingSellers == null)
+                {
+                    throw new NullReferenceException(nameof(pendingSellers));
+                }
                 return _mapper.Map<List<SellerData>>(pendingSellers);
             }
             catch
@@ -234,26 +238,6 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public Task<List<ItemData>> GetSellerItems(Guid sellerId)
-        {
-            List<ItemData> itemData = new List<ItemData>();
-            try
-            {
-                var query = from sellers in _appDbContext.Sellers
-                            join item in _appDbContext.Items on sellerId equals item.SellerId
-                            select item;
-                foreach (var item in query)
-                {
-                    itemData.Add(_mapper.Map<ItemData>(item)); ;
-                
-                    }
-
-                return Task.FromResult(itemData);
-            }
-            catch
-            {
-                throw;
-            }
-        }
+       
     }
 }

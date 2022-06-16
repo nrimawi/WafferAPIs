@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entities;
 using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
@@ -13,7 +14,7 @@ namespace WafferAPIs.Controllers
 {
 
     // [Authorize(Roles = "Admin")]
-    [Route("api/Items")]
+    [Route("api/items")]
     [ApiController]
     public class ItemsController : ControllerBase
     {
@@ -24,7 +25,7 @@ namespace WafferAPIs.Controllers
 
         }
 
-
+        [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
         public async Task<ActionResult<List<ItemData>>> GetItems()
         {
@@ -45,7 +46,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Get item by id")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ItemData>> GetItem(Guid id)
         {
@@ -65,7 +66,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Create new item")]
         [HttpPost]
         public async Task<ActionResult<ItemData>> PostItem(ItemData ItemData)
         {
@@ -89,7 +90,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Delete an item")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {
@@ -112,7 +113,73 @@ namespace WafferAPIs.Controllers
         }
 
 
+        [SwaggerOperation(Summary = "Get items by seller id ")]
+        [HttpGet("seller/{id}")]
+        public async Task<ActionResult<ItemData>> GetItemsBySeller(Guid id)
+        {
+            try
+            {
+                
+                return Ok(await _ItemRepository.GetItemsBySeller(id));
 
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
+
+
+        [SwaggerOperation(Summary = "Get items by subCategory id ")]
+        [HttpGet("subcategory/{id}")]
+        public async Task<ActionResult<ItemData>> GetItemsBySubCategory(Guid id)
+        {
+            try
+            {
+
+                return Ok(await _ItemRepository.GetItemsBySubCategory(id));
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
+
+
+        [SwaggerOperation(Summary = "Get items by subCategory id and brand name")]
+        [HttpGet("subcategory/{id}/{brandname}")]
+        public async Task<ActionResult<ItemData>> GetItemsByBrandAndSubCategory(Guid id, string brandname)
+        {
+            try
+            {
+
+                return Ok(await _ItemRepository.GetItemsByBrandAndSubCategory(id,brandname));
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
     }
 }
 

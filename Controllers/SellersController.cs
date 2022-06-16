@@ -79,26 +79,6 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [HttpGet("{id}/items")]
-        [SwaggerOperation(Summary = "Get all items for specific seller")]
-
-        public async Task<ActionResult<SellerData>> GetSellerItems(Guid id)
-        {
-            try
-            {
-                return Ok(await _sellerRepository.GetSellerItems(id));
-            }
-            catch (NullReferenceException e)
-            {
-                return NotFound(e.Message);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
-        }
 
         [SwaggerOperation(Summary = "Update seller")]
         [HttpPut("{id}")]
@@ -170,7 +150,7 @@ namespace WafferAPIs.Controllers
 
 
         [SwaggerOperation(Summary = "Get pending for verfication sellers")]
-        [HttpGet("/pending-sellers")]
+        [HttpGet("pending-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetPendingVerificationSellers()
         {
             try
@@ -191,7 +171,7 @@ namespace WafferAPIs.Controllers
         }
 
         [SwaggerOperation(Summary = "Get verified sellers")]
-        [HttpGet("/verified-sellers")]
+        [HttpGet("verified-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetVerifiedSellers()
         {
             try
@@ -212,7 +192,7 @@ namespace WafferAPIs.Controllers
         }
 
         [SwaggerOperation(Summary = "Verify seller then send sms & email with password")]
-        [HttpPost("/verify-seller")]
+        [HttpPost("verify-seller")]
         public async Task<IActionResult> VerifySeller(Guid sellerId)
         {
 

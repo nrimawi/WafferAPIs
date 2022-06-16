@@ -25,7 +25,7 @@ namespace WafferAPIs.Controllers
 {
 
     // [Authorize(Roles = "Admin")]
-    [Route("api/subCategories")]
+    [Route("api/subcategories")]
     [ApiController]
     public class SubCategoriesController : ControllerBase
     {
@@ -58,9 +58,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [SwaggerOperation(Summary = "Get subCategory")]
-
-
+        [SwaggerOperation(Summary = "Get subCategory by id")]
         [HttpGet("{id}")]
         public async Task<ActionResult<SubCategoryData>> GetSubCategory(Guid id)
         {
@@ -79,7 +77,7 @@ namespace WafferAPIs.Controllers
 
             }
         }
-        [SwaggerOperation(Summary = "Update subCategory")]
+        [SwaggerOperation(Summary = "Update sub category")]
 
         [HttpPut("{id}")]
         public async Task<ActionResult<SubCategoryData>> PutSubCategory(Guid id, SubCategoryData SubCategoryData)
@@ -102,7 +100,7 @@ namespace WafferAPIs.Controllers
 
         }
 
-        [SwaggerOperation(Summary = "Create new subCategory")]
+        [SwaggerOperation(Summary = "Create new sub category")]
 
         [HttpPost]
         public async Task<ActionResult<SubCategoryData>> PostSubCategory(SubCategoryData SubCategoryData)
@@ -128,7 +126,7 @@ namespace WafferAPIs.Controllers
         }
 
 
-        [SwaggerOperation(Summary = "Delete subCategory")]
+        [SwaggerOperation(Summary = "Delete sub category")]
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubCategory(Guid id)
@@ -152,8 +150,8 @@ namespace WafferAPIs.Controllers
         }
 
 
-        [SwaggerOperation(Summary = " Get subCategories by categoryId")]
-        [HttpGet("/categoryId/{id}")]
+        [SwaggerOperation(Summary = " Get sub categories by categoryId")]
+        [HttpGet("/category-id/{id}")]
         public async Task<ActionResult<SubCategoryData>> GetSubCategoriesByCategoryId(Guid id)
         {
 
@@ -175,7 +173,7 @@ namespace WafferAPIs.Controllers
         }
 
         [SwaggerOperation(Summary = "Add feature/s at existing subcategory features")]
-        [HttpPatch("/addFeatures/{id}")]
+        [HttpPatch("add-features/{id}")]
         public async Task<IActionResult> AddFeaturesToSubCategory(Guid id, List<SubCategoryFeature> features)
         {
 
@@ -198,7 +196,7 @@ namespace WafferAPIs.Controllers
         }
 
         [SwaggerOperation(Summary = "Update subCategory features")]
-        [HttpPut("/UpdateFeatures/{id}")]
+        [HttpPut("update-features/{id}")]
         public async Task<IActionResult> UpdateSubCategoryFeatures(Guid id, List<SubCategoryFeature> features)
         {
 
@@ -221,7 +219,7 @@ namespace WafferAPIs.Controllers
         }
 
         [SwaggerOperation(Summary = "Get features for specific subCategory")]
-        [HttpGet("/GetFeatures/{id}")]
+        [HttpGet("get-features/{id}")]
         public async Task<ActionResult<List<SubCategoryFeature>>> GetSubCategoryFeatures(Guid id)
         {
 

@@ -19,9 +19,9 @@ namespace WafferAPIs.DAL.Repositories
         Task<List<ItemData>> GetItems();
         Task<ItemData> GetItemById(Guid id);
         Task DeleteItem(Guid id);
-
-
-
+        Task<List<ItemData>> GetItemsBySeller(Guid sellerId);
+        Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId);
+        Task<List<ItemData>> GetItemsByBrandAndSubCategory(Guid subCategoryId, string brand);
     }
 
 
@@ -50,6 +50,7 @@ namespace WafferAPIs.DAL.Repositories
                 item.Status = true;
                 item.SellerId = ItemData.SellerId;
                 item.SubCategoryId = ItemData.SubCategoryId;
+                item.CreatedDate = DateTime.Now;
                 _appDbContext.Items.Add(item);
 
                 await _appDbContext.SaveChangesAsync();
@@ -122,5 +123,63 @@ namespace WafferAPIs.DAL.Repositories
         {
             _appDbContext.Dispose();
         }
+
+        public async Task<List<ItemData>> GetItemsBySeller(Guid sellerId)
+        {
+            try
+            {
+                var Items = await _appDbContext.Items.Where(s => s.SellerId == sellerId && s.Status == true).ToListAsync();
+
+                if (Items == null)
+                {
+                    throw new NullReferenceException("Seller has no items");
+                }
+                return _mapper.Map<List<ItemData>>(Items);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId)
+        {
+            try
+            {
+                var Items = await _appDbContext.Items.Where(s => s.SubCategoryId == subCategoryId && s.Status == true).ToListAsync();
+
+                if (Items == null)
+                {
+                    throw new NullReferenceException("Error in subcategory id");
+                }
+                return _mapper.Map<List<ItemData>>(Items);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<List<ItemData>> GetItemsByBrandAndSubCategory(Guid subCategoryId, string brand)
+        {
+            try
+            {
+
+                var Items = await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Brand.ToLower() == brand.ToLower() && i.Status == true).ToListAsync();
+
+                if (Items == null)
+                {
+                    throw new NullReferenceException("Error retrieving items");
+                }
+                return _mapper.Map<List<ItemData>>(Items);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
     }
 }
