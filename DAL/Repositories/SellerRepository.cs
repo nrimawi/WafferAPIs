@@ -25,7 +25,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<SellerData> GetLoggedInSeller(string userId);
         Task<List<SellerData>> GetPendingVerficationSellers();
         Task<List<SellerData>> GetVerifiedSellers();
-      
+        Task<SellerData> RejectSellerRequest(Guid sellerId);
 
     }
 
@@ -238,6 +238,29 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-       
+        public async Task<SellerData> RejectSellerRequest(Guid sellerId)
+        {
+            #region finding seller
+            try
+            {
+                Seller seller = await _appDbContext.Sellers.FindAsync(sellerId);
+
+                if (seller == null || seller.Status == false)
+                {
+                    throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
+
+                }
+                if (!seller.IsVerified)
+                    throw new Exception("Seller is already verified try to login");
+                #endregion
+                _appDbContext.Sellers.Remove(seller);
+                return _mapper.Map<SellerData>(seller);
+            }
+            catch { throw; }
+            {
+
+            }
+        }
+
     }
 }

@@ -22,6 +22,9 @@ namespace WafferAPIs.DAL.Repositories
         Task<List<ItemData>> GetItemsBySeller(Guid sellerId);
         Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId);
         Task<List<ItemData>> GetItemsByBrandAndSubCategory(Guid subCategoryId, string brand);
+        Task<List<ItemData>> GetPendingItems();
+        Task ApprovePendingItem(Guid ItemId);
+
     }
 
 
@@ -45,14 +48,36 @@ namespace WafferAPIs.DAL.Repositories
 
             try
             {
+
+                var subCategory = await _appDbContext.SubCategories.Where(s => s.Id == ItemData.SubCategoryId && s.Status == true).FirstOrDefaultAsync();
+                if (subCategory == null)
+                    throw new Exception("Cant find Subcategory at item inseration");
+
+
                 Item item = _mapper.Map<Item>(ItemData);
 
                 item.Status = true;
                 item.SellerId = ItemData.SellerId;
                 item.SubCategoryId = ItemData.SubCategoryId;
                 item.CreatedDate = DateTime.Now;
-                _appDbContext.Items.Add(item);
+                if (subCategory.AveragePrice * 2 < ItemData.Price || subCategory.AveragePrice / 2 > ItemData.Price)
+                    item.pending = true;
 
+                else
+                {
+                    item.pending = false;
+
+                    #region Update Subcategory Average Price
+                    var ItemsCountInSubCat = await _appDbContext.Items.Where(item => item.Status == true && item.pending != true && item.SubCategoryId == ItemData.SubCategoryId).CountAsync();
+
+                    subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((_appDbContext.SubCategories.Count() * subCategory.AveragePrice) + ItemData.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + ItemData.Price) / 2);
+                    _appDbContext.SubCategories.Update(subCategory);
+
+                    #endregion
+                }
+
+
+                _appDbContext.Items.Add(item);
                 await _appDbContext.SaveChangesAsync();
                 return _mapper.Map<ItemData>(item);
             }
@@ -65,7 +90,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             try
             {
-                var activeItems = await _appDbContext.Items.Where(i => i.Status == true).ToListAsync();
+                var activeItems = await _appDbContext.Items.Where(i => i.Status == true && i.pending != true).ToListAsync();
                 return _mapper.Map<List<ItemData>>(activeItems);
             }
             catch
@@ -146,7 +171,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             try
             {
-                var Items = await _appDbContext.Items.Where(s => s.SubCategoryId == subCategoryId && s.Status == true).ToListAsync();
+                var Items = await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Status == true && i.pending != true).ToListAsync();
 
                 if (Items == null)
                 {
@@ -166,7 +191,7 @@ namespace WafferAPIs.DAL.Repositories
             try
             {
 
-                var Items = await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Brand.ToLower() == brand.ToLower() && i.Status == true).ToListAsync();
+                var Items = await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Brand.ToLower() == brand.ToLower() && i.Status == true && i.pending != true).ToListAsync();
 
                 if (Items == null)
                 {
@@ -181,5 +206,47 @@ namespace WafferAPIs.DAL.Repositories
 
         }
 
+        public async Task<List<ItemData>> GetPendingItems()
+        {
+            try
+            {
+                var items = (await _appDbContext.Items.Where(Item => Item.Status == true && Item.pending == true).ToListAsync());
+                if (items == null)
+                {
+                    throw new NullReferenceException("Error retrieving items");
+                }
+                return _mapper.Map<List<ItemData>>(items);
+            }
+            catch { throw; }
+        }
+
+        public async Task ApprovePendingItem(Guid ItemId)
+        {
+            try
+            {
+                var item = (await _appDbContext.Items.Where(Item => Item.Status == true && Item.pending == true && Item.Id == ItemId).FirstOrDefaultAsync());
+                if (item == null)
+                {
+                    throw new NullReferenceException("Can not Find Item");
+                }
+
+                _appDbContext.Items.Update(item);
+
+                #region Update Subcategory Average Price
+
+                var subCategory = await _appDbContext.SubCategories.Where(s => s.Id == item.SubCategoryId && s.Status == true).FirstOrDefaultAsync();
+
+                if (subCategory == null)
+                    throw new Exception("Cant find Subcategory at item inseration");
+
+                var ItemsCountInSubCat = await _appDbContext.Items.Where(i => i.Status == true && i.pending != true && i.SubCategoryId == item.SubCategoryId).CountAsync();
+
+                subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((_appDbContext.SubCategories.Count() * subCategory.AveragePrice) + item.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + item.Price) / 2);
+                #endregion
+
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch { throw; }
+        }
     }
 }

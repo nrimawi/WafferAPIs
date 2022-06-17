@@ -181,6 +181,51 @@ namespace WafferAPIs.Controllers
 
             }
         }
+
+        [SwaggerOperation(Summary = "Get pending items")]
+        [HttpGet("pending")]
+        public async Task<ActionResult<ItemData>> GetPendingItems()
+        {
+            try
+            {
+
+                return Ok(await _ItemRepository.GetPendingItems());
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
+
+
+        [SwaggerOperation(Summary = "Approve pending items")]
+        [HttpPost("approve/{id}")]
+        public async Task<IActionResult> ApprovePendingItem(Guid id)
+        {
+            try
+            {
+                await _ItemRepository.ApprovePendingItem(id);
+                return Ok("item Has been approved successfully");
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
     }
 }
 

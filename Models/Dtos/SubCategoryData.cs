@@ -17,8 +17,10 @@ namespace WafferAPIs.Models.Dtos
         [Required(ErrorMessage = "Fetures is required")]
         public List<SubCategoryFeature> Fetures { get; set; }
 
-        [Required(ErrorMessage = "Category id is required")]
 
+        [Required(ErrorMessage = "AveragePrice is required")]
+        public int AveragePrice { get; set; }
+        [Required(ErrorMessage = "Category id is required")]
 
         public CategoryData Category { get; set; }
 

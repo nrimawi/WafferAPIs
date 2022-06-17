@@ -10,6 +10,7 @@ namespace WafferAPIs.DAL.Entities
         public string Fetures { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
+        public int AveragePrice { get; set; }
         public bool Status { get; set; }
 
 

@@ -257,6 +257,61 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Reject seller then send sms with the reason")]
+        [HttpPost("reject-seller")]
+        public async Task<IActionResult> RejectSeller(Guid sellerId, string reason)
+        {
+
+            try
+            {
+
+                if (reason == null || reason.Length == 0)
+                    reason = "Undefiend Reason";
+
+                #region reject seller
+                SellerData seller;
+                try
+                {
+                    seller = await _sellerRepository.RejectSellerRequest(sellerId);
+                   
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error at rejecting user due to " + ex.Message);
+
+                }
+                #endregion
+                #region  Send Sms
+
+                SMSRequestData smsRequest = new SMSRequestData();
+                smsRequest.From = "MJPilot";
+                smsRequest.Text = $"Your registration request at Waffer was decliend due to: {reason}, please try to register again!";
+
+
+                smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);
+
+                try
+                {
+                    await _smsSender.SendSMSAsync(smsRequest);
+                }
+                catch (Exception e) { throw new Exception("User rejected but sms was failed due to  " + e.Message); }
+                #endregion
+
+                return Ok("User has been rejected and sms was sent successfully ");
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+
     }
 
 

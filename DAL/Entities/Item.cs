@@ -11,6 +11,7 @@ namespace WafferAPIs.DAL.Entities
 
         public Guid Id { get; set; }
 
+        public bool pending { get; set; }= false;
         public string Name { get; set; }
 
         public double Price { get; set; }
@@ -28,7 +29,7 @@ namespace WafferAPIs.DAL.Entities
 
         public string ModelNumber { get; set; }
 
-        public int Waranty { get; set; }
+        public int Warranty { get; set; }
         public Double SaleRatio { get; set; }
 
         public string OtherFeatures { get; set; }
@@ -89,7 +90,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? InDoorIceDispsnser { get; set; }
 
 
-        public bool? WaterFilteratiom { get; set; }
+        public bool? WaterFilteration { get; set; }
 
 
         public bool? LEDLight { get; set; }

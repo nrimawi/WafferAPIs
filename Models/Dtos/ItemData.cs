@@ -21,11 +21,9 @@ namespace WafferAPIs.DAL.Entities
 
         public string Color { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Dimensions { get; set; }
 
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public double? Weight { get; set; }
 
         public string PhotoLink { get; set; }
@@ -36,8 +34,7 @@ namespace WafferAPIs.DAL.Entities
         [Required(ErrorMessage = "ModelNumber Should be filled")]
         public string ModelNumber { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? Waranty { get; set; }
+        public int? Warranty { get; set; }
         [Required(ErrorMessage = "Description Should be filled")]
 
         public string Description { get; set; }
@@ -101,7 +98,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? InDoorIceDispsnser { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? WaterFilteratiom { get; set; }
+        public bool? WaterFilteration{ get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? LEDLight { get; set; }
