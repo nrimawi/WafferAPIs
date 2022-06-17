@@ -11,6 +11,7 @@ namespace WafferAPIs.DAL.Entities
     public class ItemData
     {
 
+        #region Genral Features
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Name Should be filled")]
@@ -18,7 +19,7 @@ namespace WafferAPIs.DAL.Entities
         [Required(ErrorMessage = "Price Should be filled")]
         public double Price { get; set; }
 
-        public string  Color { get; set; }
+        public string Color { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Dimensions { get; set; }
@@ -37,17 +38,22 @@ namespace WafferAPIs.DAL.Entities
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? Waranty { get; set; }
+        [Required(ErrorMessage = "Description Should be filled")]
+
+        public string Description { get; set; }
 
         public Double SaleRatio { get; set; } = 0;
         public string OtherFeatures { get; set; }
 
         [Required(ErrorMessage = "SubCategoryId Should be filled")]
-        public Guid SubCategoryId{ get; set; }
+        public Guid SubCategoryId { get; set; }
 
         [Required(ErrorMessage = "SellerId Should be filled")]
         public Guid SellerId { get; set; }
+        #endregion
 
-        //Vacuum Cleaners
+
+        #region Vacuum Cleaners
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? WorkOnBattery { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -75,12 +81,13 @@ namespace WafferAPIs.DAL.Entities
         public int? BrushesNumber { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public int? CabelLength { get; set; }
+        public int? CableLength { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? RemoteControl { get; set; }
+        public bool? HasRemoteControl { get; set; }
+        #endregion
 
-        //Refrigerator
+        #region Refrigerator
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? FreezerInclude { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -91,7 +98,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? InDoorWaterDispsnser { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? DoorIceDispsnser { get; set; }
+        public bool? InDoorIceDispsnser { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? WaterFilteratiom { get; set; }
@@ -109,7 +116,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? ChildLock { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? DoorOpenAlrm { get; set; }
+        public bool? HasAlarm { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public string? EnergyGrade { get; set; }
@@ -118,9 +125,10 @@ namespace WafferAPIs.DAL.Entities
         public bool? MobileConnection { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public int? MotorWarrenty { get; set; }
+        public int? MotorWarranty { get; set; }
+        #endregion
 
-        //TV
+        #region TV
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? ScreenSize { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -128,47 +136,50 @@ namespace WafferAPIs.DAL.Entities
         public string? DispalyType { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? Resoultion { get; set; }
+        public string? Resolution { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? ConnectionToWifi { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? HasSataliteReciver { get; set; }
+        public bool? HasSatelliteReceiver { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? HasScreenShring { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? HasMagicMotion { get; set; }
+        public bool? SupportMagicMotion { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public int? ScreenWarrenty { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? IsSmart { get; set; }
+        #endregion
 
-        //Mobile 
+        #region Mobile
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? SIM { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Cameras { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? BoxComponent { get; set; }
+        public string? BoxComponents { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public int? Momory { get; set; }
+        #endregion
 
-        //HairDryer 
+        #region HairDryer
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public int? HeatOptions { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public int? SpeedOptions { get; set; }
+        #endregion
 
-        //Washer
+        #region Washer
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? MaxSpanSpeed { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -176,13 +187,14 @@ namespace WafferAPIs.DAL.Entities
         public string? NumberOfPrograms { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? HasSteamFunctions { get; set; } 
+        public string? HasSteamFunctions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? HasQuickWashFunction { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? HasDryerFunction { get; set; }
+        #endregion
 
     }
 }

@@ -71,10 +71,10 @@ namespace WafferAPIs.DAL.Entities
         public int? BrushesNumber { get; set; }
 
 
-        public int? CabelLength { get; set; }
+        public int? CableLength { get; set; }
 
 
-        public bool? RemoteControl { get; set; }
+        public bool? HasRemoteControl { get; set; }
 
         //Refrigerator
         public bool? FreezerInclude { get; set; }
@@ -86,7 +86,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? InDoorWaterDispsnser { get; set; }
 
 
-        public bool? DoorIceDispsnser { get; set; }
+        public bool? InDoorIceDispsnser { get; set; }
 
 
         public bool? WaterFilteratiom { get; set; }
@@ -104,7 +104,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? ChildLock { get; set; }
 
 
-        public bool? DoorOpenAlrm { get; set; }
+        public bool? HasAlarm { get; set; }
 
 
         public string? EnergyGrade { get; set; }
@@ -113,29 +113,28 @@ namespace WafferAPIs.DAL.Entities
         public bool? MobileConnection { get; set; }
 
 
-        public int? MotorWarrenty { get; set; }
+        public int? MotorWarranty { get; set; }
+       
         //TV
-
-
         public int? ScreenSize { get; set; }
 
 
         public string? DispalyType { get; set; }
 
 
-        public string? Resoultion { get; set; }
+        public string? Resolution { get; set; }
 
 
         public bool? ConnectionToWifi { get; set; }
 
 
-        public bool? HasSataliteReciver { get; set; }
+        public bool? HasSatelliteReceiver { get; set; }
 
 
         public bool? HasScreenShring { get; set; }
 
 
-        public bool? HasMagicMotion { get; set; }
+        public bool? SupportMagicMotion { get; set; }
 
 
         public int? ScreenWarrenty { get; set; }
@@ -144,27 +143,23 @@ namespace WafferAPIs.DAL.Entities
         public bool? IsSmart { get; set; }
 
         //Mobile 
-
-
         public string? SIM { get; set; }
 
 
         public string? Cameras { get; set; }
 
 
-        public string? BoxComponent { get; set; }
+        public string? BoxComponents { get; set; }
 
         public int? Momory { get; set; }
 
         //HairDryer 
-
         public int? HeatOptions { get; set; }
 
 
         public int? SpeedOptions { get; set; }
 
         //Washer
-
         public int? MaxSpanSpeed { get; set; }
 
 

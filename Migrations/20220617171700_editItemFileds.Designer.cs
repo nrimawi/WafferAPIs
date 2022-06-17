@@ -10,15 +10,15 @@ using WafferAPIs.Dbcontext;
 namespace WafferAPIs.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220616192735_editItem")]
-    partial class editItem
+    [Migration("20220617171700_editItemFileds")]
+    partial class editItemFileds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ItemVersion", "5.0.17")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -315,7 +315,7 @@ namespace WafferAPIs.Migrations
                     b.Property<string>("BatterryInfo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BoxComponent")
+                    b.Property<string>("BoxComponents")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Brand")
@@ -324,7 +324,7 @@ namespace WafferAPIs.Migrations
                     b.Property<int?>("BrushesNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CabelLength")
+                    b.Property<int?>("CableLength")
                         .HasColumnType("int");
 
                     b.Property<string>("Cameras")
@@ -354,14 +354,8 @@ namespace WafferAPIs.Migrations
                     b.Property<string>("DispalyType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("DoorIceDispsnser")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("DoorNumbers")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("DoorOpenAlrm")
-                        .HasColumnType("bit");
 
                     b.Property<string>("EnergyGrade")
                         .HasColumnType("nvarchar(max)");
@@ -375,19 +369,22 @@ namespace WafferAPIs.Migrations
                     b.Property<string>("Functions")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("HasAlarm")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("HasDryerFunction")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("HasLEDScreen")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("HasMagicMotion")
-                        .HasColumnType("bit");
-
                     b.Property<bool?>("HasQuickWashFunction")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("HasSataliteReciver")
+                    b.Property<bool?>("HasRemoteControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasSatelliteReceiver")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("HasScreenShring")
@@ -398,6 +395,9 @@ namespace WafferAPIs.Migrations
 
                     b.Property<int?>("HeatOptions")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("InDoorIceDispsnser")
+                        .HasColumnType("bit");
 
                     b.Property<bool?>("InDoorWaterDispsnser")
                         .HasColumnType("bit");
@@ -423,7 +423,7 @@ namespace WafferAPIs.Migrations
                     b.Property<string>("MotorType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MotorWarrenty")
+                    b.Property<int?>("MotorWarranty")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -441,10 +441,10 @@ namespace WafferAPIs.Migrations
                     b.Property<int?>("Power")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("RemoteControl")
-                        .HasColumnType("bit");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
-                    b.Property<string>("Resoultion")
+                    b.Property<string>("Resolution")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SIM")
@@ -470,6 +470,9 @@ namespace WafferAPIs.Migrations
 
                     b.Property<Guid>("SubCategoryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("SupportMagicMotion")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Waranty")
                         .HasColumnType("int");
