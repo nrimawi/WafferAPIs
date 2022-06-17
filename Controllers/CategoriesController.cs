@@ -25,7 +25,6 @@ using WafferAPIs.Utilites;
 namespace WafferAPIs.Controllers
 {
 
-    // [Authorize(Roles = "Admin")]
     [Route("api/categories")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -78,6 +77,8 @@ namespace WafferAPIs.Controllers
             }
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryData>> PutCategory(Guid id, CategoryData categoryData)
         {
@@ -100,6 +101,7 @@ namespace WafferAPIs.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryData>> PostCategory(CategoryData categoryData)
         {
@@ -124,6 +126,7 @@ namespace WafferAPIs.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {

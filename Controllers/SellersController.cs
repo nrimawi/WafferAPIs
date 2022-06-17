@@ -37,7 +37,7 @@ namespace WafferAPIs.Controllers
             _smsSender = smsSender;
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [SwaggerOperation(Summary = "Get all sellers")]
         public async Task<ActionResult<List<SellerData>>> GetSellers()
@@ -79,7 +79,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Update seller")]
         [HttpPut("{id}")]
         public async Task<ActionResult<SellerData>> PutSeller(Guid id, SellerData sellerData)
@@ -125,7 +125,7 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Delete seller")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSeller(Guid id)
@@ -148,7 +148,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get pending for verfication sellers")]
         [HttpGet("pending-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetPendingVerificationSellers()
@@ -170,6 +170,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get verified sellers")]
         [HttpGet("verified-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetVerifiedSellers()
@@ -191,6 +192,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Verify seller then send sms & email with password")]
         [HttpPost("verify-seller")]
         public async Task<IActionResult> VerifySeller(Guid sellerId)
@@ -257,6 +259,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Reject seller then send sms with the reason")]
         [HttpPost("reject-seller")]
         public async Task<IActionResult> RejectSeller(Guid sellerId, string reason)

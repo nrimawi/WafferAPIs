@@ -20,6 +20,7 @@ namespace WafferAPIs.DAL.Entities
 
         public string Dimensions { get; set; }
 
+        public string Description { get; set; }
         public double Weight { get; set; }
 
         

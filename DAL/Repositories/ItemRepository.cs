@@ -60,7 +60,7 @@ namespace WafferAPIs.DAL.Repositories
                 item.SellerId = ItemData.SellerId;
                 item.SubCategoryId = ItemData.SubCategoryId;
                 item.CreatedDate = DateTime.Now;
-                if (subCategory.AveragePrice * 2 < ItemData.Price || subCategory.AveragePrice / 2 > ItemData.Price)
+                if (subCategory.AveragePrice * 3 < ItemData.Price || subCategory.AveragePrice / 3 > ItemData.Price)
                     item.pending = true;
 
                 else
@@ -68,7 +68,7 @@ namespace WafferAPIs.DAL.Repositories
                     item.pending = false;
 
                     #region Update Subcategory Average Price
-                    var ItemsCountInSubCat = await _appDbContext.Items.Where(item => item.Status == true && item.pending != true && item.SubCategoryId == ItemData.SubCategoryId).CountAsync();
+                    var ItemsCountInSubCat = await _appDbContext.Items.CountAsync(i => i.Status == true && i.pending != true && i.SubCategoryId == item.SubCategoryId);
 
                     subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((_appDbContext.SubCategories.Count() * subCategory.AveragePrice) + ItemData.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + ItemData.Price) / 2);
                     _appDbContext.SubCategories.Update(subCategory);
@@ -229,9 +229,8 @@ namespace WafferAPIs.DAL.Repositories
                 {
                     throw new NullReferenceException("Can not Find Item");
                 }
-
+                item.pending = false;
                 _appDbContext.Items.Update(item);
-
                 #region Update Subcategory Average Price
 
                 var subCategory = await _appDbContext.SubCategories.Where(s => s.Id == item.SubCategoryId && s.Status == true).FirstOrDefaultAsync();
@@ -241,7 +240,7 @@ namespace WafferAPIs.DAL.Repositories
 
                 var ItemsCountInSubCat = await _appDbContext.Items.Where(i => i.Status == true && i.pending != true && i.SubCategoryId == item.SubCategoryId).CountAsync();
 
-                subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((_appDbContext.SubCategories.Count() * subCategory.AveragePrice) + item.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + item.Price) / 2);
+                subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((ItemsCountInSubCat * subCategory.AveragePrice) + item.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + item.Price) / 2);
                 #endregion
 
                 await _appDbContext.SaveChangesAsync();

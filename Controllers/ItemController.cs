@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entities;
@@ -13,7 +14,6 @@ using WafferAPIs.Models.Others;
 namespace WafferAPIs.Controllers
 {
 
-    // [Authorize(Roles = "Admin")]
     [Route("api/items")]
     [ApiController]
     public class ItemsController : ControllerBase
@@ -24,7 +24,7 @@ namespace WafferAPIs.Controllers
             _ItemRepository = ItemRepository;
 
         }
-
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
         public async Task<ActionResult<List<ItemData>>> GetItems()
@@ -66,6 +66,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Create new item")]
         [HttpPost]
         public async Task<ActionResult<ItemData>> PostItem(ItemData  itemData)
@@ -89,7 +90,8 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
+        
+        [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Delete an item")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
@@ -111,7 +113,6 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
 
         [SwaggerOperation(Summary = "Get items by seller id ")]
         [HttpGet("seller/{id}")]
@@ -182,6 +183,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get pending items")]
         [HttpGet("pending")]
         public async Task<ActionResult<ItemData>> GetPendingItems()
@@ -204,7 +206,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Approve pending items")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ApprovePendingItem(Guid id)
