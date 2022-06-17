@@ -13,13 +13,15 @@ namespace WafferAPIs.DAL.Entities
 
         public string Name { get; set; }
 
+        public double Price { get; set; }
+
         public string Color { get; set; }
 
         public string Dimensions { get; set; }
 
         public double Weight { get; set; }
 
-
+        
         public string PhotoLink { get; set; }
 
         public string Brand { get; set; }

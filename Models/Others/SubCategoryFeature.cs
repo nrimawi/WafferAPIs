@@ -8,11 +8,17 @@ namespace WafferAPIs.Models.Others
 
 
         public string CodeName { get; set; }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? NameToShow { get; set; }
 
         public string Type { get; set; }
 
+        public SubCategoryFeature()
+        {
+            NameToShow = null;
+
+        }
         public SubCategoryFeature(string codeName, string type)
         {
             Type = type;

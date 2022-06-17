@@ -231,14 +231,14 @@ namespace WafferAPIs.Controllers
                 SMSRequestData smsRequest = new SMSRequestData();
                 smsRequest.From = "MJPilot";
                 //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
-                smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
+                smsRequest.Text = $"Welcome to waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
 
 
                 smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);
 
                 try
                 {
-                    await _smsSender.SendSMSAsync(smsRequest);
+                    //await _smsSender.SendSMSAsync(smsRequest);
                 }
                 catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
                 #endregion

@@ -65,7 +65,7 @@ namespace WafferAPIs.DAL.Repositories
         {
             try
             {
-                var activeItems = await _appDbContext.Items.Where(Item => Item.Status == true).ToListAsync();
+                var activeItems = await _appDbContext.Items.Where(i => i.Status == true).ToListAsync();
                 return _mapper.Map<List<ItemData>>(activeItems);
             }
             catch

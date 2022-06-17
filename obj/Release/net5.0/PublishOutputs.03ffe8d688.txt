@@ -45,6 +45,7 @@ C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Microsoft.Visua
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\MimeKit.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\BouncyCastle.Crypto.dll
+C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll

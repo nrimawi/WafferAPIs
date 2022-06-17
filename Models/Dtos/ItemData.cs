@@ -15,6 +15,8 @@ namespace WafferAPIs.DAL.Entities
 
         [Required(ErrorMessage = "Name Should be filled")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "Price Should be filled")]
+        public double Price { get; set; }
 
         public string  Color { get; set; }
 
@@ -55,7 +57,6 @@ namespace WafferAPIs.DAL.Entities
 
         public bool? HasLEDScreen { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-
         public string? Functions { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
@@ -151,7 +152,6 @@ namespace WafferAPIs.DAL.Entities
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? SIM { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-
         public string? Cameras { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
@@ -176,7 +176,7 @@ namespace WafferAPIs.DAL.Entities
         public string? NumberOfPrograms { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? HasSteamFunctions { get; set; }
+        public string? HasSteamFunctions { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? HasQuickWashFunction { get; set; }

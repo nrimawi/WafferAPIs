@@ -5,8 +5,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\Users\nazee\Desktop\Deploy\Deploy</_PublishTargetUrl>
-    <History>True|2022-06-10T12:36:14.3539846Z;True|2022-06-10T14:15:16.5469125+03:00;True|2022-06-10T14:04:34.1801926+03:00;True|2022-06-10T14:04:15.8664697+03:00;True|2022-06-09T03:28:48.5173179+03:00;</History>
+    <_PublishTargetUrl>C:\Users\nazee\Desktop\Deploy\LatestDeploy176</_PublishTargetUrl>
+    <History>True|2022-06-16T22:55:47.9753734Z;True|2022-06-10T15:36:14.3539846+03:00;True|2022-06-10T14:15:16.5469125+03:00;True|2022-06-10T14:04:34.1801926+03:00;True|2022-06-10T14:04:15.8664697+03:00;True|2022-06-09T03:28:48.5173179+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <DestinationConnectionStrings Include="DefaultConnection">

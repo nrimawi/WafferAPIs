@@ -8,7 +8,7 @@ using WafferAPIs.DAL.Entities;
 using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.Models;
-
+using WafferAPIs.Models.Others;
 
 namespace WafferAPIs.Controllers
 {
@@ -68,11 +68,11 @@ namespace WafferAPIs.Controllers
 
         [SwaggerOperation(Summary = "Create new item")]
         [HttpPost]
-        public async Task<ActionResult<ItemData>> PostItem(ItemData ItemData)
+        public async Task<ActionResult<ItemData>> PostItem(ItemData  itemData)
         {
             try
             {
-                ItemData createdItem = await _ItemRepository.CreateItem(ItemData);
+                ItemData createdItem = await _ItemRepository.CreateItem(itemData);
 
 
                 return CreatedAtAction("GetItem", new { id = createdItem.Id }, createdItem);
@@ -165,6 +165,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
+
 
                 return Ok(await _ItemRepository.GetItemsByBrandAndSubCategory(id,brandname));
 
