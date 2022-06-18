@@ -87,7 +87,7 @@ namespace WafferAPIs
 
             #region SMS service
             services.Configure<SMSSettings>(Configuration.GetSection("SMSSettings"));
-            services.AddTransient<ISMSSender, SMSSender>();
+            services.AddScoped<ISMSSender, SMSSender>();
             #endregion
 
             #region Email service

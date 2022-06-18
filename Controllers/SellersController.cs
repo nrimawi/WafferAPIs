@@ -231,7 +231,7 @@ namespace WafferAPIs.Controllers
                 #endregion
                 #region Create sms data and send req
                 SMSRequestData smsRequest = new SMSRequestData();
-                smsRequest.From = "MJPilot";
+                smsRequest.From = "Wffer";
                 //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
                 smsRequest.Text = $"Welcome to waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
 
@@ -287,7 +287,7 @@ namespace WafferAPIs.Controllers
                 #region  Send Sms
 
                 SMSRequestData smsRequest = new SMSRequestData();
-                smsRequest.From = "MJPilot";
+                smsRequest.From = "Waffer";
                 smsRequest.Text = $"Your registration request at Waffer was decliend due to: {reason}, please try to register again!";
 
 

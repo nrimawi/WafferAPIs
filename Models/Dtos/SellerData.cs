@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WafferAPIs.Models
 {
@@ -20,7 +21,6 @@ namespace WafferAPIs.Models
 
         [Required(ErrorMessage = "ContactPhoneNumber is required")]
         public String ContactPhoneNumber { get; set; }
-
         public String CustomerServicePhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Store info is required")]
