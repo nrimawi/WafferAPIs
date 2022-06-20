@@ -27,6 +27,12 @@ using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Service;
 using WafferAPIs.DAL.Helpers.SMSAPI.Model;
 using WafferAPIs.DAL.Helpers.SMSAPI;
+using WafferAPIs.Models.Dtos;
+using WafferAPIs.DAL.Entities;
+using WafferAPIs.Utilites;
+using System.Reflection;
+using System.IO;
+
 
 namespace WafferAPIs
 {
@@ -48,6 +54,10 @@ namespace WafferAPIs
             #region  Dependency injection 
             services.AddScoped<ISellerRepository, SellerRepository>();
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ICutomizePackegeManager, CutomizePackegeManager>();
 
             #endregion
 
@@ -55,6 +65,15 @@ namespace WafferAPIs
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Seller, SellerData>().ReverseMap();
+                cfg.CreateMap<Category, CategoryData>().ReverseMap();
+                cfg.CreateMap<Item, ItemData>().ReverseMap();
+
+
+                cfg.CreateMap<SubCategory, SubCategoryData>().ForMember(dest =>
+                dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToDto(src.Fetures)));
+                cfg.CreateMap<SubCategoryData, SubCategory>().ForMember(dest =>
+                dest.Fetures, opt => opt.MapFrom(src => new FeatureMapper().ToEntity(src.Fetures)));
+
 
             });
             var mapper = config.CreateMapper();
@@ -68,12 +87,11 @@ namespace WafferAPIs
 
             #region SMS service
             services.Configure<SMSSettings>(Configuration.GetSection("SMSSettings"));
-            services.AddScoped<ISMSSender, SMSSender>();
+            services.AddTransient<ISMSSender, SMSSender>();
             #endregion
 
             #region Email service
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            ///   services.AddTransient<IMailService, MailService>();
             services.AddScoped<IEmailSender, EmailSender>();
             #endregion
 
@@ -104,11 +122,35 @@ namespace WafferAPIs
             });
             #endregion
 
+            #region CORS
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
+            #endregion
+
             #region Swagger
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "Authentaication and Authoraization in .NET core 5 & " });
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "These services were built for Waffer System" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -137,6 +179,10 @@ namespace WafferAPIs
                         }
                     }
                 });
+
+
+
+
             });
             #endregion
         }
@@ -155,6 +201,15 @@ namespace WafferAPIs
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseEndpoints(endpoints =>
             {

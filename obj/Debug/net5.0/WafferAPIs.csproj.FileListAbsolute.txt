@@ -63,6 +63,13 @@ C:\Users\nazee\source\repos\JWTAuth\obj\Debug\net5.0\refint\WafferAPIs.dll
 C:\Users\nazee\source\repos\JWTAuth\obj\Debug\net5.0\WafferAPIs.pdb
 C:\Users\nazee\source\repos\JWTAuth\obj\Debug\net5.0\WafferAPIs.genruntimeconfig.cache
 C:\Users\nazee\source\repos\JWTAuth\obj\Debug\net5.0\ref\WafferAPIs.dll
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.csproj.AssemblyReference.cache
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.AssemblyInfoInputs.cache
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.AssemblyInfo.cs
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.csproj.CoreCompileInputs.cache
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\appsettings.Development.json
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\appsettings.json
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\WafferAPIs.exe
@@ -73,7 +80,7 @@ C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\WafferAPIs.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\WafferAPIs.pdb
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\AutoMapper.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Humanizer.dll
-C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\MailKit.dll
+C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Mailjet.Client.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -109,12 +116,9 @@ C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.VisualStudio.Web.C
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\MimeKit.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Newtonsoft.Json.dll
-C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\BouncyCastle.Crypto.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\System.Composition.AttributedModel.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\System.Composition.Convention.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\System.Composition.Hosting.dll
@@ -191,13 +195,6 @@ C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\runtimes\win-arm\lib\net5.0\
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\runtimes\win-arm64\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.csproj.AssemblyReference.cache
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.AssemblyInfoInputs.cache
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.AssemblyInfo.cs
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.csproj.CoreCompileInputs.cache
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\scopedcss\bundle\WafferAPIs.styles.css
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\staticwebassets\WafferAPIs.StaticWebAssets.Manifest.cache
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.RazorTargetAssemblyInfo.cache
@@ -207,4 +204,5 @@ C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\refint\WafferAPIs.dll
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.pdb
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\WafferAPIs.genruntimeconfig.cache
 C:\Users\nazee\source\repos\Waffer\obj\Debug\net5.0\ref\WafferAPIs.dll
-C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Mailjet.Client.dll
+C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Swashbuckle.AspNetCore.Annotations.dll
+C:\Users\nazee\source\repos\Waffer\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll

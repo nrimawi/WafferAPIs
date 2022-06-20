@@ -83,7 +83,7 @@ namespace WafferAPIs.DAL.Repositories
                 else
                     throw new UnauthorizedAccessException();
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

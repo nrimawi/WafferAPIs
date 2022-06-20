@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WafferAPIs.DAL.Entities;
+using WafferAPIs.Models.Others;
+using WafferAPIs.Utilites;
 
 namespace WafferAPIs
 {
@@ -13,8 +16,10 @@ namespace WafferAPIs
     {
         public static void Main(string[] args)
         {
+
             CreateHostBuilder(args).Build().Run();
         }
+
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)

@@ -8,7 +8,6 @@ C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\WafferAPIs.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\WafferAPIs.pdb
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\AutoMapper.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Humanizer.dll
-C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\MailKit.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -44,9 +43,7 @@ C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.VisualStudio.Web
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\MimeKit.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Newtonsoft.Json.dll
-C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\BouncyCastle.Crypto.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -142,3 +139,5 @@ C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\refint\WafferAPIs.dll
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\WafferAPIs.pdb
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\WafferAPIs.genruntimeconfig.cache
 C:\Users\nazee\source\repos\Waffer\obj\Release\net5.0\ref\WafferAPIs.dll
+C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Mailjet.Client.dll
+C:\Users\nazee\source\repos\Waffer\bin\Release\net5.0\Swashbuckle.AspNetCore.Annotations.dll

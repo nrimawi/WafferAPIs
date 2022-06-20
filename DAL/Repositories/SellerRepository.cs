@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.Dbcontext;
+using WafferAPIs.DAL.Entities;
 
 namespace WafferAPIs.DAL.Repositories
 {
@@ -24,7 +25,7 @@ namespace WafferAPIs.DAL.Repositories
         Task<SellerData> GetLoggedInSeller(string userId);
         Task<List<SellerData>> GetPendingVerficationSellers();
         Task<List<SellerData>> GetVerifiedSellers();
-
+        Task<SellerData> RejectSellerRequest(Guid sellerId);
 
     }
 
@@ -65,19 +66,12 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
-        public Task<List<SellerData>> GetSellers()
+        public async Task<List<SellerData>> GetSellers()
         {
             try
             {
-                List<Seller> activesellers = new List<Seller>();
-
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
-                {
-                    if (seller.Status == true) activesellers.Add(seller);
-
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(activesellers));
+                var activeSellers = await _appDbContext.Sellers.Where(s => s.Status == true).ToListAsync();
+                return _mapper.Map<List<SellerData>>(activeSellers);
             }
             catch
             {
@@ -91,11 +85,11 @@ namespace WafferAPIs.DAL.Repositories
             {
 
 
-                Seller seller = await _appDbContext.Sellers.FindAsync(id);
+                Seller seller = await _appDbContext.Sellers.Where(s => s.Id == id && s.Status == true).FirstOrDefaultAsync();
 
-                if (seller == null || seller.Status == false)
+                if (seller == null)
                 {
-                    throw new NullReferenceException("Seller with id=" + id + " is not found");
+                    throw new NullReferenceException("SubCategory with id=" + id + " is not found");
                 }
                 return _mapper.Map<SellerData>(seller);
             }
@@ -139,8 +133,7 @@ namespace WafferAPIs.DAL.Repositories
 
         public async Task DeleteSeller(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException("id");
+
             try
             {
 
@@ -173,8 +166,8 @@ namespace WafferAPIs.DAL.Repositories
                     throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
 
                 }
-                //if (seller.IsVerified)
-                //    throw new Exception("Seller is already verified try to login");
+                if (seller.IsVerified)
+                    throw new Exception("Seller is already verified try to login");
                 #endregion
                 #region Generate UserAuthentication(Register new user(seller))
                 var user = _authenticationRepository.RegisterUser(seller.Email, password).Result;
@@ -213,19 +206,31 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public Task<List<SellerData>> GetPendingVerficationSellers()
+        public async Task<List<SellerData>> GetPendingVerficationSellers()
+        {
+
+            try
+            {
+                var pendingSellers = await _appDbContext.Sellers.Where(s => s.Status == true && s.IsVerified == false).ToListAsync();
+                return _mapper.Map<List<SellerData>>(pendingSellers);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<List<SellerData>> GetVerifiedSellers()
         {
             try
             {
-                List<Seller> pendingSellers = new List<Seller>();
-
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
+                var pendingSellers = await _appDbContext.Sellers.Where(s => s.Status == true && s.IsVerified == true).ToListAsync();
+                if (pendingSellers == null)
                 {
-                    if (seller.Status == true && seller.IsVerified == false) pendingSellers.Add(seller);
-
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));
+                    throw new NullReferenceException(nameof(pendingSellers));
+                }
+                return _mapper.Map<List<SellerData>>(pendingSellers);
             }
             catch
             {
@@ -233,26 +238,29 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public Task<List<SellerData>> GetVerifiedSellers()
+        public async Task<SellerData> RejectSellerRequest(Guid sellerId)
         {
+            #region finding seller
             try
             {
-                List<Seller> pendingSellers = new List<Seller>();
+                Seller seller = await _appDbContext.Sellers.FindAsync(sellerId);
 
-
-                _appDbContext.Sellers.ToListAsync().Result.ForEach(seller =>
+                if (seller == null || seller.Status == false)
                 {
-                    if (seller.Status == true && seller.IsVerified == true) pendingSellers.Add(seller);
+                    throw new NullReferenceException("Seller with id=" + sellerId + " is not found");
 
-                });
-                return Task.FromResult(_mapper.Map<List<SellerData>>(pendingSellers));
+                }
+                if (seller.IsVerified)
+                    throw new Exception("Seller is already verified try to login");
+                #endregion
+                _appDbContext.Sellers.Remove(seller);
+                return _mapper.Map<SellerData>(seller);
             }
-            catch
+            catch { throw; }
             {
-                throw;
+
             }
         }
-
 
     }
 }

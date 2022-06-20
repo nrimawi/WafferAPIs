@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Helpers.EmailAPI;
 using WafferAPIs.DAL.Helpers.EmailAPI.Model;
@@ -19,31 +21,30 @@ using WafferAPIs.Utilites;
 
 namespace WafferAPIs.Controllers
 {
+
     // [Authorize(Roles = "Admin")]
     [Route("api/sellers")]
     [ApiController]
     public class SellersController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly ISellerRepository _studentRepository;
-        //  private readonly IMailService _mailService;
+        private readonly ISellerRepository _sellerRepository;
         private readonly IEmailSender _emailSender;
         private readonly ISMSSender _smsSender;
-        public SellersController(AppDbContext context, ISellerRepository sellerRepository, IEmailSender emailSender, ISMSSender smsSender)
+        public SellersController(ISellerRepository sellerRepository, IEmailSender emailSender, ISMSSender smsSender)
         {
-            _context = context;
-            _studentRepository = sellerRepository;
+            _sellerRepository = sellerRepository;
             _emailSender = emailSender;
             _smsSender = smsSender;
         }
 
-
+       // [Authorize(Roles = "Admin")]
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all sellers")]
         public async Task<ActionResult<List<SellerData>>> GetSellers()
         {
             try
             {
-                return Ok(await _studentRepository.GetSellers());
+                return Ok(await _sellerRepository.GetSellers());
 
             }
             catch (NullReferenceException e)
@@ -58,13 +59,13 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
+        [SwaggerOperation(Summary = "Get seller by id")]
         [HttpGet("{id}")]
         public async Task<ActionResult<SellerData>> GetSeller(Guid id)
         {
             try
             {
-                return Ok(await _studentRepository.GetSellerById(id));
+                return Ok(await _sellerRepository.GetSellerById(id));
             }
             catch (NullReferenceException e)
             {
@@ -78,12 +79,14 @@ namespace WafferAPIs.Controllers
             }
         }
 
+       // [Authorize(Roles = "Admin,User")]
+        [SwaggerOperation(Summary = "Update seller")]
         [HttpPut("{id}")]
         public async Task<ActionResult<SellerData>> PutSeller(Guid id, SellerData sellerData)
         {
             try
             {
-                return Ok(await _studentRepository.UpdateSeller(id, sellerData));
+                return Ok(await _sellerRepository.UpdateSeller(id, sellerData));
 
             }
             catch (NullReferenceException e)
@@ -99,13 +102,13 @@ namespace WafferAPIs.Controllers
 
         }
 
-
+        [SwaggerOperation(Summary = "Create new seller(Register New Seller)")]
         [HttpPost]
         public async Task<ActionResult<SellerData>> PostSeller(SellerData sellerData)
         {
             try
             {
-                SellerData createdSeller = await _studentRepository.CreateSeller(sellerData);
+                SellerData createdSeller = await _sellerRepository.CreateSeller(sellerData);
 
 
                 return CreatedAtAction("GetSeller", new { id = createdSeller.Id }, createdSeller);
@@ -122,15 +125,15 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
-
+       // [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Delete seller by Id")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSeller(Guid id)
         {
             try
             {
-                await _studentRepository.DeleteSeller(id);
-                return Ok();
+                await _sellerRepository.DeleteSeller(id);
+                return Ok("Deleted Sucsessfully");
 
             }
             catch (NullReferenceException e)
@@ -145,13 +148,14 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
-        [HttpGet("/pending-sellers")]
+       // [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Get pending sellers(Not Verifyed or Rejected Yet)")]
+        [HttpGet("pending-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetPendingVerificationSellers()
         {
             try
             {
-                return Ok(await _studentRepository.GetPendingVerficationSellers());
+                return Ok(await _sellerRepository.GetPendingVerficationSellers());
 
             }
             catch (NullReferenceException e)
@@ -166,12 +170,14 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [HttpGet("/verified-sellers")]
+        //[Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Get all verified sellers")]
+        [HttpGet("verified-sellers")]
         public async Task<ActionResult<List<SellerData>>> GetVerifiedSellers()
         {
             try
             {
-                return Ok(await _studentRepository.GetVerifiedSellers());
+                return Ok(await _sellerRepository.GetVerifiedSellers());
 
             }
             catch (NullReferenceException e)
@@ -186,19 +192,21 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [HttpPost("/verify-seller")]
+      //  [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Verify seller then send sms & email with password")]
+        [HttpPost("verify-seller")]
         public async Task<IActionResult> VerifySeller(Guid sellerId)
         {
 
             try
             {
-                var generetedpassword = "W" + new RandomPasswordGenerator().Password + "@";
+                var password = "W" + new RandomPasswordGenerator().Password + "@";
 
                 #region verify seller
                 SellerData seller;
                 try
                 {
-                    seller = await _studentRepository.VerifySeller(sellerId, generetedpassword);
+                    seller = await _sellerRepository.VerifySeller(sellerId, password);
                 }
                 catch (Exception ex)
                 {
@@ -212,7 +220,7 @@ namespace WafferAPIs.Controllers
                 emailRequest.Subject = "Waffer - Activate your account";
                 emailRequest.Name = seller.Name;
                 emailRequest.Link = "https://www.youtube.com/watch?v=Ik_OFtkTGtY&list=RDYhylTnTvBow&index=2";
-                emailRequest.Password = generetedpassword;
+                emailRequest.Password = password;
 
 
                 try
@@ -223,13 +231,16 @@ namespace WafferAPIs.Controllers
                 #endregion
                 #region Create sms data and send req
                 SMSRequestData smsRequest = new SMSRequestData();
-                smsRequest.NameToShow = "WafferServices";
-                smsRequest.Message = "أهلاً بك في موقع وفر";
-                smsRequest.Number = "+972" + seller.ContactPhoneNumber.ToString();
+                smsRequest.From = "Wffer";
+                //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
+                smsRequest.Text = $"Welcome to waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
+
+
+                smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);
 
                 try
                 {
-                    //       await _smsSender.SendSMSAsync(smsRequest);
+                    await _smsSender.SendSMSAsync(smsRequest);
                 }
                 catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
                 #endregion
@@ -247,30 +258,88 @@ namespace WafferAPIs.Controllers
 
             }
         }
+
+      //  [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Reject seller then send sms with the reason")]
+        [HttpPost("reject-seller")]
+        public async Task<IActionResult> RejectSeller(Guid sellerId, string reason)
+        {
+
+            try
+            {
+
+                if (reason == null || reason.Length == 0)
+                    reason = "Undefiend Reason";
+
+                #region reject seller
+                SellerData seller;
+                try
+                {
+                    seller = await _sellerRepository.RejectSellerRequest(sellerId);
+                   
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error at rejecting user due to " + ex.Message);
+
+                }
+                #endregion
+                #region  Send Sms
+
+                SMSRequestData smsRequest = new SMSRequestData();
+                smsRequest.From = "Waffer";
+                smsRequest.Text = $"Your registration request at Waffer was decliend due to: {reason}, please try to register again!";
+
+
+                smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);
+
+                try
+                {
+                    await _smsSender.SendSMSAsync(smsRequest);
+                }
+                catch (Exception e) { throw new Exception("User rejected but sms was failed due to  " + e.Message); }
+                #endregion
+
+                return Ok("User has been rejected and sms was sent successfully ");
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        [HttpPost("xx-seller")]
+        public async Task<IActionResult> xx()
+        {
+            #region Create sms data and send req
+            SMSRequestData smsRequest = new SMSRequestData();
+            smsRequest.From = "Wffer";
+            //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
+            smsRequest.Text = $"Welcome to waffer, your request has been accepted.Please login to activate your account. Your password is";
+
+
+            smsRequest.To = "+972599646099";
+
+            try
+            {
+                await _smsSender.SendSMSAsync(smsRequest);
+                return Ok();
+            }
+            catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
+            #endregion
+
+
+        }
+
     }
+
+
+
 }
 
-
-//        [HttpPost("send")]
-//        public async Task<IActionResult> SendMail([FromForm] WelcomeRequest request)
-//        {
-//            try
-//            {
-//                request.Email = "nazeehRimawi";
-//                request.Password = "sdsdsdsds";
-//                request.Link = "sdsdsdsd";
-//                request.Name = "tets";
-
-//                await _emailSender.SendEmailAsync(request);
-//                return Ok();
-//            }
-//            catch (Exception ex)
-//            {
-//                throw;
-//            }
-
-//        }
-
-
-//}
-//}
