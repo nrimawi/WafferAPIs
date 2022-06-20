@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WafferAPIs.DAL.Helpers.SMSAPI.Model;
 
@@ -93,31 +94,31 @@ namespace WafferAPIs.DAL.Helpers.SMSAPI
             try
             {
 
-                client.BaseAddress = new Uri("https://api.mailjet.com/");
-                client.DefaultRequestHeaders
-                      .Accept
-                      .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
-                client.DefaultRequestHeaders.Add("Authorization", _smsSettings.Token);
+                //client.BaseAddress = new Uri("https://api.mailjet.com/");
+                //client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders
+                //      .Accept
+                //      .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+                //client.DefaultRequestHeaders.Add("Authorization", _smsSettings.Token);
+
+                //var json = JsonConvert.SerializeObject(requestData);
+                //HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "v4/sms-send");
+                //request.Content = new StringContent(json,
+                //                                    Encoding.UTF8,
+                //                                    "application/json");//CONTENT-TYPE header
+
+                //var req = await client.SendAsync(request);
+                //req.EnsureSuccessStatusCode();
 
 
-                var json = JsonConvert.SerializeObject(requestData);
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "v4/sms-send");
-                request.Content = new StringContent(json,
-                                                    Encoding.UTF8,
-                                                    "application/json");//CONTENT-TYPE header
-
-
-
-                var req = await client.SendAsync(request);
-                req.EnsureSuccessStatusCode();
-
-                //client.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-
-                //HttpContent context = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //HttpResponseMessage response = await client.PostAsync(
-                //    _smsSettings.API_Uri, context);
+                var request = new HttpRequestMessage(HttpMethod.Post, _smsSettings.API_Uri);
+                request.Headers.Accept.Clear();
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _smsSettings.Token);
+                request.Content = new StringContent("{...}", Encoding.UTF8, "application/json");
+                var response = await client.SendAsync(request, CancellationToken.None);
+                response.EnsureSuccessStatusCode();
+                // Solve problem  https://getridbug.com/asp-net/httpclient-this-instance-has-already-started-one-or-more-requests-properties-can-only-be-modified-before-sending-the-first-request/
 
             }
             catch { throw; }

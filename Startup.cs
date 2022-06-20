@@ -57,7 +57,7 @@ namespace WafferAPIs
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
-
+            services.AddScoped<ICutomizePackegeManager, CutomizePackegeManager>();
 
             #endregion
 
@@ -87,12 +87,11 @@ namespace WafferAPIs
 
             #region SMS service
             services.Configure<SMSSettings>(Configuration.GetSection("SMSSettings"));
-            services.AddScoped<ISMSSender, SMSSender>();
+            services.AddTransient<ISMSSender, SMSSender>();
             #endregion
 
             #region Email service
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            ///   services.AddTransient<IMailService, MailService>();
             services.AddScoped<IEmailSender, EmailSender>();
             #endregion
 
@@ -123,7 +122,7 @@ namespace WafferAPIs
             });
             #endregion
 
-
+            #region CORS
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -134,6 +133,8 @@ namespace WafferAPIs
                         builder.AllowAnyHeader();
                     });
             });
+            #endregion
+
             #region Swagger
 
             services.AddCors(options =>
@@ -178,7 +179,7 @@ namespace WafferAPIs
                         }
                     }
                 });
-              
+
 
 
 
