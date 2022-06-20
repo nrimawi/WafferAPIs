@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Models.Auth;
 using WafferAPIs.Models.Auth;
 using WafferAPIs.DAL.Repositories;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace WafferAPIs.Controllers
 {
@@ -31,6 +32,7 @@ namespace WafferAPIs.Controllers
 
 
 
+        [SwaggerOperation(Summary = "Create new Admin(This method is accessed by super admin only)")]
 
         [HttpPost]
         [Route("register-admin")]
@@ -44,7 +46,7 @@ namespace WafferAPIs.Controllers
             catch (Exception ex) { return BadRequest(ex.Message); }
 
         }
-
+        [SwaggerOperation(Summary = "Login for all system users")]
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)

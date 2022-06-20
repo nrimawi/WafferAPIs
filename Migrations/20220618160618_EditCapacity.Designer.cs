@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WafferAPIs.Dbcontext;
 
 namespace WafferAPIs.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220618160618_EditCapacity")]
+    partial class EditCapacity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,7 +312,7 @@ namespace WafferAPIs.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BatteryInfo")
+                    b.Property<string>("BatterryInfo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BoxComponents")
@@ -376,7 +378,7 @@ namespace WafferAPIs.Migrations
                     b.Property<bool?>("HasDryerFunction")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("HasLedScreen")
+                    b.Property<bool?>("HasLEDScreen")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("HasQuickWashFunction")
@@ -406,7 +408,7 @@ namespace WafferAPIs.Migrations
                     b.Property<bool?>("IsSmart")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("LedLight")
+                    b.Property<bool?>("LEDLight")
                         .HasColumnType("bit");
 
                     b.Property<int?>("MaxSpanSpeed")

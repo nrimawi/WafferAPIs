@@ -149,7 +149,7 @@ namespace WafferAPIs
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "Authentaication and Authoraization in .NET core 5 & " });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WafferAPIs", Version = "v1", Description = "These services were built for Waffer System" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",

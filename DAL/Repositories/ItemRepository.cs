@@ -70,7 +70,7 @@ namespace WafferAPIs.DAL.Repositories
                     #region Update Subcategory Average Price
                     var ItemsCountInSubCat = await _appDbContext.Items.CountAsync(i => i.Status == true && i.pending != true && i.SubCategoryId == item.SubCategoryId);
 
-                    subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((_appDbContext.SubCategories.Count() * subCategory.AveragePrice) + ItemData.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + ItemData.Price) / 2);
+                    subCategory.AveragePrice = (int)(ItemsCountInSubCat != 0 ? ((ItemsCountInSubCat * subCategory.AveragePrice) + ItemData.Price) / (ItemsCountInSubCat + 1) : (subCategory.AveragePrice + ItemData.Price) / 2);
                     _appDbContext.SubCategories.Update(subCategory);
 
                     #endregion

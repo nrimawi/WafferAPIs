@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using WafferAPIs.DAL.Entites;
 using WafferAPIs.DAL.Entities;
 using WafferAPIs.DAL.Helpers.EmailAPI;
@@ -36,6 +37,7 @@ namespace WafferAPIs.Controllers
 
         }
 
+        [SwaggerOperation(Summary = "Get all categories")]
 
         [HttpGet]
         public async Task<ActionResult<List<CategoryData>>> GetCategories()
@@ -56,8 +58,7 @@ namespace WafferAPIs.Controllers
 
             }
         }
-
-
+        [SwaggerOperation(Summary = "Get category by id")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryData>> GetCategory(Guid id)
         {
@@ -77,8 +78,8 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
-        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Update category")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryData>> PutCategory(Guid id, CategoryData categoryData)
         {
@@ -100,8 +101,8 @@ namespace WafferAPIs.Controllers
 
         }
 
-
-        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Create new category")]
+        // [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryData>> PostCategory(CategoryData categoryData)
         {
@@ -125,8 +126,8 @@ namespace WafferAPIs.Controllers
             }
         }
 
-
-        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Delete category by Id")]
+        // [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {

@@ -24,7 +24,6 @@ namespace WafferAPIs.Controllers
             _ItemRepository = ItemRepository;
 
         }
-        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
         public async Task<ActionResult<List<ItemData>>> GetItems()
@@ -66,7 +65,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,User")]
+       // [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Create new item")]
         [HttpPost]
         public async Task<ActionResult<ItemData>> PostItem(ItemData  itemData)
@@ -91,7 +90,7 @@ namespace WafferAPIs.Controllers
             }
         }
         
-        [Authorize(Roles = "Admin,User")]
+       // [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Delete an item")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
@@ -114,7 +113,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [SwaggerOperation(Summary = "Get items by seller id ")]
+        [SwaggerOperation(Summary = "Get items by seller ids")]
         [HttpGet("seller/{id}")]
         public async Task<ActionResult<ItemData>> GetItemsBySeller(Guid id)
         {
@@ -137,7 +136,7 @@ namespace WafferAPIs.Controllers
         }
 
 
-        [SwaggerOperation(Summary = "Get items by subCategory id ")]
+        [SwaggerOperation(Summary = "Get items by sub category id")]
         [HttpGet("subcategory/{id}")]
         public async Task<ActionResult<ItemData>> GetItemsBySubCategory(Guid id)
         {
@@ -160,7 +159,7 @@ namespace WafferAPIs.Controllers
         }
 
 
-        [SwaggerOperation(Summary = "Get items by subCategory id and brand name")]
+        [SwaggerOperation(Summary = "Get items by sub category id and brand name")]
         [HttpGet("subcategory/{id}/{brandname}")]
         public async Task<ActionResult<ItemData>> GetItemsByBrandAndSubCategory(Guid id, string brandname)
         {
@@ -183,8 +182,8 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        [SwaggerOperation(Summary = "Get pending items")]
+       // [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Get all pending items")]
         [HttpGet("pending")]
         public async Task<ActionResult<ItemData>> GetPendingItems()
         {
@@ -206,8 +205,8 @@ namespace WafferAPIs.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        [SwaggerOperation(Summary = "Approve pending items")]
+      //  [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Approve pending item by Id")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ApprovePendingItem(Guid id)
         {

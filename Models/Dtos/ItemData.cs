@@ -58,7 +58,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? WorkOnChargerCable { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? HasLEDScreen { get; set; }
+        public bool? HasLedScreen { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Functions { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -69,10 +69,10 @@ namespace WafferAPIs.DAL.Entities
         public string? MotorType { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public int? Capacity { get; set; }
+        public double? Capacity { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? BatterryInfo { set; get; }
+        public string? BatteryInfo { set; get; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public int? BrushesNumber { get; set; }
@@ -101,7 +101,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? WaterFilteration{ get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? LEDLight { get; set; }
+        public bool? LedLight { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public string? ControlType { get; set; }

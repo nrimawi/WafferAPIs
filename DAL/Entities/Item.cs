@@ -52,7 +52,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? WorkOnChargerCable { get; set; }
 
 
-        public bool? HasLEDScreen { get; set; }
+        public bool? HasLedScreen { get; set; }
 
 
         public string? Functions { get; set; }
@@ -64,10 +64,10 @@ namespace WafferAPIs.DAL.Entities
         public string? MotorType { get; set; }
 
 
-        public int? Capacity { get; set; }
+        public double? Capacity { get; set; }
 
 
-        public string? BatterryInfo { set; get; }
+        public string? BatteryInfo { set; get; }
 
 
         public int? BrushesNumber { get; set; }
@@ -94,7 +94,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? WaterFilteration { get; set; }
 
 
-        public bool? LEDLight { get; set; }
+        public bool? LedLight { get; set; }
 
 
         public string? ControlType { get; set; }
