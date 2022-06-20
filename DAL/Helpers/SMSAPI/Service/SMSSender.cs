@@ -115,7 +115,7 @@ namespace WafferAPIs.DAL.Helpers.SMSAPI
                 request.Headers.Accept.Clear();
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _smsSettings.Token);
-                request.Content = new StringContent("{...}", Encoding.UTF8, "application/json");
+                request.Content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
                 var response = await client.SendAsync(request, CancellationToken.None);
                 response.EnsureSuccessStatusCode();
                 // Solve problem  https://getridbug.com/asp-net/httpclient-this-instance-has-already-started-one-or-more-requests-properties-can-only-be-modified-before-sending-the-first-request/
