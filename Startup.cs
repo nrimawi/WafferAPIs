@@ -57,7 +57,7 @@ namespace WafferAPIs
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddScoped<ICutomizePackegeManager, CutomizePackegeManager>();
+            services.AddScoped<ICustomizedPackegeManager, CustomizedPackegeManager>();
 
             #endregion
 

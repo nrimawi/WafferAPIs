@@ -10,6 +10,7 @@ using WafferAPIs.DAL.Repositories;
 using WafferAPIs.Dbcontext;
 using WafferAPIs.Models;
 using WafferAPIs.Models.Others;
+using WafferAPIs.Utilites;
 
 namespace WafferAPIs.Controllers
 {
@@ -19,10 +20,11 @@ namespace WafferAPIs.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IItemRepository _ItemRepository;
-        public ItemsController(AppDbContext context, IItemRepository ItemRepository)
+        private readonly ICustomizedPackegeManager _customizedPackegeManager;
+        public ItemsController(AppDbContext context, IItemRepository ItemRepository, ICustomizedPackegeManager customizedPackegeManager)
         {
             _ItemRepository = ItemRepository;
-
+            _customizedPackegeManager = customizedPackegeManager;
         }
         [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
@@ -65,10 +67,10 @@ namespace WafferAPIs.Controllers
             }
         }
 
-       // [Authorize(Roles = "Admin,User")]
+        // [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Create new item")]
         [HttpPost]
-        public async Task<ActionResult<ItemData>> PostItem(ItemData  itemData)
+        public async Task<ActionResult<ItemData>> PostItem(ItemData itemData)
         {
             try
             {
@@ -89,8 +91,8 @@ namespace WafferAPIs.Controllers
 
             }
         }
-        
-       // [Authorize(Roles = "Admin,User")]
+
+        // [Authorize(Roles = "Admin,User")]
         [SwaggerOperation(Summary = "Delete an item")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
@@ -119,7 +121,7 @@ namespace WafferAPIs.Controllers
         {
             try
             {
-                
+
                 return Ok(await _ItemRepository.GetItemsBySeller(id));
 
             }
@@ -167,7 +169,7 @@ namespace WafferAPIs.Controllers
             {
 
 
-                return Ok(await _ItemRepository.GetItemsByBrandAndSubCategory(id,brandname));
+                return Ok(await _ItemRepository.GetItemsByBrandAndSubCategory(id, brandname));
 
             }
             catch (NullReferenceException e)
@@ -182,7 +184,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Get all pending items")]
         [HttpGet("pending")]
         public async Task<ActionResult<ItemData>> GetPendingItems()
@@ -205,7 +207,7 @@ namespace WafferAPIs.Controllers
             }
         }
 
-      //  [Authorize(Roles = "Admin")]
+        //  [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Approve pending item by Id")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ApprovePendingItem(Guid id)
@@ -227,6 +229,56 @@ namespace WafferAPIs.Controllers
 
             }
         }
+
+        //  [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Reject pending item by Id")]
+        [HttpPost("reject/{id}")]
+        public async Task<IActionResult> RejectPendingItem(Guid id)
+        {
+            try
+            {
+                await _ItemRepository.RejectPendingItem(id);
+                return Ok("item Has been approved successfully");
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+        }
+
+
+        [SwaggerOperation(Summary = "Customize Package")]
+        [HttpPost("customized-package")]
+        public async Task<IActionResult> createCusomizedPackage(CustomizePackageRequest customizePackageRequest)
+        {
+            try
+            {
+               
+                return Ok(await _customizedPackegeManager.createCustomizedPackage(customizePackageRequest));
+
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message + "Inner Ex: " + e.InnerException.Message);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+
+            }
+        }
+
+
+
+
     }
 }
 

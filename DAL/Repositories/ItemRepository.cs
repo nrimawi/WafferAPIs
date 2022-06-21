@@ -24,6 +24,8 @@ namespace WafferAPIs.DAL.Repositories
         Task<List<ItemData>> GetItemsByBrandAndSubCategory(Guid subCategoryId, string brand);
         Task<List<ItemData>> GetPendingItems();
         Task ApprovePendingItem(Guid ItemId);
+        Task RejectPendingItem(Guid ItemId);
+
 
     }
 
@@ -33,6 +35,7 @@ namespace WafferAPIs.DAL.Repositories
         #region Inject Services
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
+        private static Random rng = new Random();
 
         #endregion
 
@@ -91,7 +94,7 @@ namespace WafferAPIs.DAL.Repositories
             try
             {
                 var activeItems = await _appDbContext.Items.Where(i => i.Status == true && i.pending != true).ToListAsync();
-                return _mapper.Map<List<ItemData>>(activeItems);
+                return _mapper.Map<List<ItemData>>(activeItems.OrderBy(item => new Random().Next()));
             }
             catch
             {
@@ -247,5 +250,24 @@ namespace WafferAPIs.DAL.Repositories
             }
             catch { throw; }
         }
+        public async Task RejectPendingItem(Guid ItemId)
+        {
+            try
+            {
+                var item = (await _appDbContext.Items.Where(Item => Item.Status == true && Item.pending == true && Item.Id == ItemId).FirstOrDefaultAsync());
+                if (item == null)
+                {
+                    throw new NullReferenceException("Can not Find Item");
+                }
+                item.Status = false;
+                _appDbContext.Items.Update(item);
+             
+
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch { throw; }
+        }
+
+
     }
 }
