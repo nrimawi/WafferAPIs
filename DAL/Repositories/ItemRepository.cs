@@ -16,11 +16,11 @@ namespace WafferAPIs.DAL.Repositories
     public interface IItemRepository : IDisposable
     {
         Task<ItemData> CreateItem(ItemData ItemData);
-        Task<List<ItemData>> GetItems();
+        Task<List<ItemData>> GetItems(string? searchFor, string? sortBy);
         Task<ItemData> GetItemById(Guid id);
         Task DeleteItem(Guid id);
         Task<List<ItemData>> GetItemsBySeller(Guid sellerId);
-        Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId);
+        Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId, string? searchFor, string? sortBy);
         Task<List<ItemData>> GetItemsByBrandAndSubCategory(Guid subCategoryId, string brand);
         Task<List<ItemData>> GetPendingItems();
         Task ApprovePendingItem(Guid ItemId);
@@ -35,7 +35,6 @@ namespace WafferAPIs.DAL.Repositories
         #region Inject Services
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
-        private static Random rng = new Random();
 
         #endregion
 
@@ -89,12 +88,64 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
-        public async Task<List<ItemData>> GetItems()
+        public async Task<List<ItemData>> GetItems(string? searchFor, string? sortBy)
         {
             try
             {
-                var activeItems = await _appDbContext.Items.Where(i => i.Status == true && i.pending != true).ToListAsync();
-                return _mapper.Map<List<ItemData>>(activeItems.OrderBy(item => new Random().Next()));
+                var itemsFromQuery = _mapper.Map<List<ItemData>>(await _appDbContext.Items.Where(i => i.Status == true && i.pending != true).ToListAsync());
+                #region search
+                if (!string.IsNullOrEmpty(searchFor))
+                {
+
+                    itemsFromQuery = itemsFromQuery.Where(i => (i.Name != null && searchFor.ToLower().Contains(i.Name.ToLower())) || (i.Brand != null && searchFor.ToLower().ToLower().Contains(i.Brand.ToLower()) )||(i.Color != null && searchFor.ToLower().ToLower().Contains(i.Color.ToLower()))  ||(i.Description != null && searchFor.ToLower().ToLower().Contains(i.Description.ToLower())) ||(i.OtherFeatures!=null&& searchFor.ToLower().ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
+                    var searchKeyWords = searchFor.Trim().Split(" ");
+                    foreach (var item in itemsFromQuery)
+                    {
+                        item.SortPriority = 0;
+
+                        foreach (var keyWord in searchKeyWords)
+                        {
+                            if (item.Name.ToLower().Contains(keyWord.ToLower()) )
+                            
+                                item.SortPriority++;
+                            
+
+                            if (item.Brand.ToLower().Contains(keyWord.ToLower()))
+                                item.SortPriority = item.SortPriority + 2;
+
+
+                            if (item.Description.ToLower().Contains(keyWord.ToLower()))
+                                item.SortPriority = item.SortPriority + 2;
+
+
+                            if (item.Color.ToLower().Contains(keyWord.ToLower()))
+                                item.SortPriority= item.SortPriority+3;
+
+                            if (item.OtherFeatures.ToLower().Contains(keyWord.ToLower()))
+                                item.SortPriority++;
+                        }
+
+                    }
+                }
+                #endregion
+
+                #region sort
+                switch (sortBy?.ToLower())
+                {
+                    case "name_desc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenByDescending(i => i.Name).ToList(); break;
+                    case "name_asc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenBy(i => i.Name).ToList(); break;
+                    case "price_desc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenByDescending(i => i.Price).ToList(); break;
+                    case "price_asc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenBy(i => i.Price).ToList(); break;
+                    case "date_desc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenByDescending(i => i.CreatedDate).ToList(); break;
+                    case "date_asc": itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenBy(i => i.CreatedDate).ToList(); break;
+                    default: itemsFromQuery = itemsFromQuery.OrderByDescending(i => i.SortPriority).ThenBy(item => new Random().Next()).ToList(); break;
+                }
+
+
+                #endregion
+
+
+                return itemsFromQuery;
             }
             catch
             {
@@ -122,7 +173,6 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
-
 
         public async Task DeleteItem(Guid id)
         {
@@ -170,17 +220,54 @@ namespace WafferAPIs.DAL.Repositories
             }
         }
 
-        public async Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId)
+        public async Task<List<ItemData>> GetItemsBySubCategory(Guid subCategoryId, string? searchFor, string? sortBy)
         {
             try
             {
-                var Items = await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Status == true && i.pending != true).ToListAsync();
+                var itemsFromQuery = _mapper.Map<List<ItemData>>(await _appDbContext.Items.Where(i => i.SubCategoryId == subCategoryId && i.Status == true && i.pending != true).ToListAsync());
 
-                if (Items == null)
+                #region search
+                if (!string.IsNullOrEmpty(searchFor))
+                {
+
+                    itemsFromQuery = itemsFromQuery.Where(i => searchFor.ToLower().Contains(i.Name.ToLower()) || searchFor.ToLower().ToLower().Contains(i.Brand.ToLower()) || searchFor.ToLower().ToLower().Contains(i.Color.ToLower())).ToList();
+                    var searchKeyWords = searchFor.Split(" ");
+                    foreach (var item in itemsFromQuery)
+                    {
+                        item.SortPriority = 0;
+
+                        foreach (var keyWord in searchKeyWords)
+                        {
+                            if (keyWord.ToLower().Contains(item.Name.ToLower()) || keyWord.ToLower().ToLower().Contains(item.Brand.ToLower()) || keyWord.ToLower().ToLower().Contains(item.Color.ToLower()))
+                            {
+                                item.SortPriority++;
+                            }
+                        }
+
+                    }
+                }
+                #endregion
+
+                #region sort
+                switch (sortBy?.ToLower())
+                {
+                    case "name_desc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenByDescending(i => i.Name).ToList(); break;
+                    case "name_asc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenBy(i => i.Name).ToList(); break;
+                    case "price_desc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenByDescending(i => i.Price).ToList(); break;
+                    case "price_asc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenBy(i => i.Price).ToList(); break;
+                    case "date_desc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenByDescending(i => i.CreatedDate).ToList(); break;
+                    case "date_asc": itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenBy(i => i.CreatedDate).ToList(); break;
+                    default: itemsFromQuery = itemsFromQuery.OrderBy(i => i.SortPriority).ThenBy(item => new Random().Next()).ToList(); break;
+                }
+
+
+                #endregion
+
+                if (itemsFromQuery == null)
                 {
                     throw new NullReferenceException("Error in subcategory id");
                 }
-                return _mapper.Map<List<ItemData>>(Items);
+                return _mapper.Map<List<ItemData>>(itemsFromQuery);
             }
             catch
             {
@@ -261,7 +348,7 @@ namespace WafferAPIs.DAL.Repositories
                 }
                 item.Status = false;
                 _appDbContext.Items.Update(item);
-             
+
 
                 await _appDbContext.SaveChangesAsync();
             }

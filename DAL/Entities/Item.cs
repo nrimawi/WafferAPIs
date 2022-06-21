@@ -118,7 +118,7 @@ namespace WafferAPIs.DAL.Entities
         public int? MotorWarranty { get; set; }
        
         //TV
-        public int? ScreenSize { get; set; }
+        public double? ScreenSize { get; set; }
 
 
         public string? DispalyType { get; set; }

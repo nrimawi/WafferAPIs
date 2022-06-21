@@ -47,7 +47,7 @@ namespace WafferAPIs.Utilites
                     packageAveragePrice += subcategory.AveragePrice;
                 }
 
-                if (packageAveragePrice * 0.65 > customizedPackageRequest.Budget)
+                if (packageAveragePrice * 0.5 > customizedPackageRequest.Budget)
                 {
                     throw new Exception("Budget is insufficent");
                 }
@@ -57,7 +57,7 @@ namespace WafferAPIs.Utilites
                 foreach (var subcategory in targetedSubCategories)
                 {
                     if (customizedPackageRequest.Brand == "Any")
-                        ItemsBySubcategory.Add(await _itemRepository.GetItemsBySubCategory(subcategory.Id));
+                        ItemsBySubcategory.Add(await _itemRepository.GetItemsBySubCategory(subcategory.Id, "", ""));
 
                     else
                         ItemsBySubcategory.Add(await _itemRepository.GetItemsByBrandAndSubCategory(subcategory.Id, customizedPackageRequest.Brand));
@@ -98,7 +98,7 @@ namespace WafferAPIs.Utilites
                         #region Vacuum Cleaners
                         else if (subcategory.Name.Equals("Vacuum Cleaners", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int neededCapacity = 550;
+                            int neededCapacity = 2500;
 
                             if (customizedPackageRequest.FamilyMembers < 3)
                                 neededCapacity = 1500;
@@ -132,17 +132,42 @@ namespace WafferAPIs.Utilites
 
                             else if (customizedPackageRequest.FamilyMembers >= 6 && customizedPackageRequest.FamilyMembers <= 8)
                                 neededCapacity = 750;
-                            else if (customizedPackageRequest.FamilyMembers < 5)
+                            else if (customizedPackageRequest.FamilyMembers > 8)
                                 neededCapacity = 950;
 
                             choosenItem = ItemsBySubcategory[index++].Where(item => item.Capacity != null &&
                             item.Capacity < neededCapacity + 100 &&
                             item.Capacity > neededCapacity - 100)
                            .OrderBy(item => new Random().Next()).FirstOrDefault();
-                            
+
                         }
                         #endregion
 
+
+                        #region Washing machine
+
+                        else if (subcategory.Name.Equals("Washing Mashines", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            int neededCapacity = 8;
+
+                            if (customizedPackageRequest.FamilyMembers < 3)
+                                neededCapacity = 7;
+
+                            else if (customizedPackageRequest.FamilyMembers >= 3 && customizedPackageRequest.FamilyMembers <= 5)
+                                neededCapacity = 9;
+
+
+                            else if (customizedPackageRequest.FamilyMembers > 8)
+                                neededCapacity = 11;
+
+                            choosenItem = ItemsBySubcategory[index++].Where(item => item.Capacity != null &&
+                            item.Capacity < neededCapacity + 1 &&
+                            item.Capacity > neededCapacity - 1)
+                           .OrderBy(item => new Random().Next()).FirstOrDefault();
+
+                        }
+
+                        #endregion
 
                         if (choosenItem != null)
                         {
@@ -151,11 +176,11 @@ namespace WafferAPIs.Utilites
                             currentPackagePrice += choosenItem.Price;
                         }
                     }
-                    if (retry ==50)
+                    if (retry == 50)
                         throw new Exception("Cant Generate Package");
                 }
 
-                while (currentPackagePrice > customizedPackageRequest.Budget && retry < 50);
+                while (currentPackagePrice > customizedPackageRequest.Budget && retry < 500);
                 #endregion
 
                 return customizedPackageresponse;

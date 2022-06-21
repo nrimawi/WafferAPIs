@@ -28,11 +28,11 @@ namespace WafferAPIs.Controllers
         }
         [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
-        public async Task<ActionResult<List<ItemData>>> GetItems()
+        public async Task<ActionResult<List<ItemData>>> GetItems([FromQuery] string searchFor, [FromQuery] string sortBy)
         {
             try
             {
-                return Ok(await _ItemRepository.GetItems());
+                return Ok(await _ItemRepository.GetItems(searchFor,sortBy));
 
             }
             catch (NullReferenceException e)
@@ -140,12 +140,12 @@ namespace WafferAPIs.Controllers
 
         [SwaggerOperation(Summary = "Get items by sub category id")]
         [HttpGet("subcategory/{id}")]
-        public async Task<ActionResult<ItemData>> GetItemsBySubCategory(Guid id)
+        public async Task<ActionResult<ItemData>> GetItemsBySubCategory([FromRoute] Guid id,[FromQuery] string searchFor, [FromQuery]  string sortBy)
         {
             try
             {
 
-                return Ok(await _ItemRepository.GetItemsBySubCategory(id));
+                return Ok(await _ItemRepository.GetItemsBySubCategory(id,searchFor,sortBy));
 
             }
             catch (NullReferenceException e)

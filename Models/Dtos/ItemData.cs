@@ -98,7 +98,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? InDoorIceDispsnser { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? WaterFilteration{ get; set; }
+        public bool? WaterFilteration { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? LedLight { get; set; }
@@ -127,7 +127,7 @@ namespace WafferAPIs.DAL.Entities
 
         #region TV
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? ScreenSize { get; set; }
+        public double? ScreenSize { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public string? DispalyType { get; set; }
@@ -192,6 +192,11 @@ namespace WafferAPIs.DAL.Entities
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? HasDryerFunction { get; set; }
         #endregion
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DateTime? CreatedDate { get; set; }
+
+  
+        public int SortPriority { get; set; } = 0; 
 
     }
 }
