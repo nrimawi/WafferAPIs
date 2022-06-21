@@ -181,10 +181,10 @@ namespace WafferAPIs.DAL.Entities
         public int? MaxSpanSpeed { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? NumberOfPrograms { get; set; }
+        public int? NumberOfPrograms { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? HasSteamFunctions { get; set; }
+        public bool? HasSteamFunctions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? HasQuickWashFunction { get; set; }

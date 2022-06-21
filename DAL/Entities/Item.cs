@@ -165,10 +165,10 @@ namespace WafferAPIs.DAL.Entities
         public int? MaxSpanSpeed { get; set; }
 
 
-        public string? NumberOfPrograms { get; set; }
+        public int? NumberOfPrograms { get; set; }
 
 
-        public string? HasSteamFunctions { get; set; }
+        public bool? HasSteamFunctions { get; set; }
 
 
         public bool? HasQuickWashFunction { get; set; }
