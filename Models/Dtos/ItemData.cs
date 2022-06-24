@@ -164,7 +164,7 @@ namespace WafferAPIs.DAL.Entities
         public string? BoxComponents { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public int? Momory { get; set; }
+        public int? Memory { get; set; }
         #endregion
 
         #region HairDryer

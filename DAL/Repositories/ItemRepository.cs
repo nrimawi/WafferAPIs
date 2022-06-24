@@ -97,7 +97,9 @@ namespace WafferAPIs.DAL.Repositories
                 if (!string.IsNullOrEmpty(searchFor))
                 {
 
-                    itemsFromQuery = itemsFromQuery.Where(i => (i.Name != null && searchFor.ToLower().Contains(i.Name.ToLower())) || (i.Brand != null && searchFor.ToLower().ToLower().Contains(i.Brand.ToLower()) )||(i.Color != null && searchFor.ToLower().ToLower().Contains(i.Color.ToLower()))  ||(i.Description != null && searchFor.ToLower().ToLower().Contains(i.Description.ToLower())) ||(i.OtherFeatures!=null&& searchFor.ToLower().ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
+                    //itemsFromQuery = itemsFromQuery.Where(i => (i.Name != null && searchFor.ToLower().Contains(i.Name.ToLower())) || (i.Brand != null && searchFor.ToLower().ToLower().Contains(i.Brand.ToLower()) )||(i.Color != null && searchFor.ToLower().ToLower().Contains(i.Color.ToLower()))  ||(i.Description != null && searchFor.ToLower().ToLower().Contains(i.Description.ToLower())) ||(i.OtherFeatures!=null&& searchFor.ToLower().ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
+                    itemsFromQuery = itemsFromQuery.Where(i => (!string.IsNullOrEmpty(i.Name) && searchFor.ToLower().Contains(i.Name.ToLower())) || (!string.IsNullOrEmpty(i.Brand) && searchFor.ToLower().Contains(i.Brand.ToLower())) || (!string.IsNullOrEmpty(i.Color) && searchFor.ToLower().Contains(i.Color.ToLower())) || (!string.IsNullOrEmpty(i.Description) && searchFor.ToLower().Contains(i.Description.ToLower())) || (!string.IsNullOrEmpty(i.OtherFeatures) && searchFor.ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
+
                     var searchKeyWords = searchFor.Trim().Split(" ");
                     foreach (var item in itemsFromQuery)
                     {

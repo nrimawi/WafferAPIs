@@ -29,7 +29,9 @@ namespace WafferAPIs.Models
         [Required(ErrorMessage = "Address is required")]
         public String Address { get; set; }
 
-
+        public string Logo { get; set; }
+        public string WebsiteLink { get; set; }
+        public string SocailMedaLink { get; set; }
 
     }
 }

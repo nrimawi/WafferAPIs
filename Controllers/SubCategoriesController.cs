@@ -151,7 +151,7 @@ namespace WafferAPIs.Controllers
 
 
         [SwaggerOperation(Summary = "Get sub categories by category Id")]
-        [HttpGet("/category-id/{id}")]
+        [HttpGet("category-id/{id}")]
         public async Task<ActionResult<SubCategoryData>> GetSubCategoriesByCategoryId(Guid id)
         {
 

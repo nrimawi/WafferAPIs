@@ -153,7 +153,7 @@ namespace WafferAPIs.DAL.Entities
 
         public string? BoxComponents { get; set; }
 
-        public int? Momory { get; set; }
+        public int? Memory { get; set; }
 
         //HairDryer 
         public int? HeatOptions { get; set; }

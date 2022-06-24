@@ -173,7 +173,8 @@ namespace WafferAPIs.Utilites
                         {
 
                             customizedPackageresponse.Add(choosenItem);
-                            currentPackagePrice += choosenItem.Price;
+
+                            currentPackagePrice += choosenItem.Price * choosenItem.SaleRatio == 0 ? 1 : choosenItem.SaleRatio;
                         }
                     }
                     if (retry == 50)
