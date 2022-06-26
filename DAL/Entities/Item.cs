@@ -133,7 +133,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? HasSatelliteReceiver { get; set; }
 
 
-        public bool? HasScreenShring { get; set; }
+        public bool? SupportScreenSharing { get; set; }
 
 
         public bool? SupportMagicMotion { get; set; }

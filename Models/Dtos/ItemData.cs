@@ -142,7 +142,7 @@ namespace WafferAPIs.DAL.Entities
         public bool? HasSatelliteReceiver { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public bool? HasScreenShring { get; set; }
+        public bool? SupportScreenSharing { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
         public bool? SupportMagicMotion { get; set; }

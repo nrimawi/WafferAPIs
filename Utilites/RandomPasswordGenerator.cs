@@ -14,9 +14,8 @@ namespace WafferAPIs.Utilites
         public string RandomPassword(int size)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(RandomString(4, true));
-            builder.Append(new Random().Next(500, 1500));
-            builder.Append(RandomString(2, false));
+            builder.Append(RandomString(3, true));
+            builder.Append(new Random().Next(100, 900));
             return builder.ToString();
         }
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WafferAPIs.Dbcontext;
 
 namespace WafferAPIs.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220625001417_editFileds")]
+    partial class editFileds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,7 +258,7 @@ namespace WafferAPIs.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SocialMediaLink")
+                    b.Property<string>("SocailMediaLink")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -388,6 +390,9 @@ namespace WafferAPIs.Migrations
                     b.Property<bool?>("HasSatelliteReceiver")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("HasScreenSharing")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("HasSteamFunctions")
                         .HasColumnType("bit");
 
@@ -470,9 +475,6 @@ namespace WafferAPIs.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool?>("SupportMagicMotion")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("SupportScreenSharing")
                         .HasColumnType("bit");
 
                     b.Property<int>("Warranty")

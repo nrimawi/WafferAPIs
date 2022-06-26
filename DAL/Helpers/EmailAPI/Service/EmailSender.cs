@@ -29,7 +29,7 @@ namespace WafferAPIs.DAL.Helpers.EmailAPI.Service
         {
             try
             {
-                string FilePath = Directory.GetCurrentDirectory() + "\\DAL\\Helpers\\EmailAPI\\Service\\Templates\\WelcomeTemplate.html";
+                string FilePath = Directory.GetCurrentDirectory() + "\\WelcomeTemplate.html";
                 StreamReader str = new StreamReader(FilePath);
                 string MailText = str.ReadToEnd();
                 str.Close();

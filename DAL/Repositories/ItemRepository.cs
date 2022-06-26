@@ -35,13 +35,15 @@ namespace WafferAPIs.DAL.Repositories
         #region Inject Services
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
+       private readonly ISubCategoryRepository _subCategoryRepository;    
 
         #endregion
 
-        public ItemRepository(AppDbContext appDbContext, IMapper mapper)
+        public ItemRepository(AppDbContext appDbContext, IMapper mapper, ISubCategoryRepository subCategoryRepository)
         {
             _mapper = mapper;
             _appDbContext = appDbContext;
+            _subCategoryRepository = subCategoryRepository; 
         }
         public async Task<ItemData> CreateItem(ItemData ItemData)
         {
@@ -93,12 +95,15 @@ namespace WafferAPIs.DAL.Repositories
             try
             {
                 var itemsFromQuery = _mapper.Map<List<ItemData>>(await _appDbContext.Items.Where(i => i.Status == true && i.pending != true).ToListAsync());
+                var subcategories= _mapper.Map<List<SubCategoryData>>(await _subCategoryRepository.GetSubCategories());
                 #region search
                 if (!string.IsNullOrEmpty(searchFor))
                 {
+                    
+
 
                     //itemsFromQuery = itemsFromQuery.Where(i => (i.Name != null && searchFor.ToLower().Contains(i.Name.ToLower())) || (i.Brand != null && searchFor.ToLower().ToLower().Contains(i.Brand.ToLower()) )||(i.Color != null && searchFor.ToLower().ToLower().Contains(i.Color.ToLower()))  ||(i.Description != null && searchFor.ToLower().ToLower().Contains(i.Description.ToLower())) ||(i.OtherFeatures!=null&& searchFor.ToLower().ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
-                    itemsFromQuery = itemsFromQuery.Where(i => (!string.IsNullOrEmpty(i.Name) && searchFor.ToLower().Contains(i.Name.ToLower())) || (!string.IsNullOrEmpty(i.Brand) && searchFor.ToLower().Contains(i.Brand.ToLower())) || (!string.IsNullOrEmpty(i.Color) && searchFor.ToLower().Contains(i.Color.ToLower())) || (!string.IsNullOrEmpty(i.Description) && searchFor.ToLower().Contains(i.Description.ToLower())) || (!string.IsNullOrEmpty(i.OtherFeatures) && searchFor.ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
+                    itemsFromQuery = itemsFromQuery.Where(i => searchFor.ToLower().Contains(getSubcategoryName(i.SubCategoryId,subcategories))|| getSubcategoryName(i.SubCategoryId, subcategories).Contains(searchFor.ToLower()) || (!string.IsNullOrEmpty(i.Name) && searchFor.ToLower().Contains(i.Name.ToLower())) || (!string.IsNullOrEmpty(i.Brand) && searchFor.ToLower().Contains(i.Brand.ToLower())) || (!string.IsNullOrEmpty(i.Color) && searchFor.ToLower().Contains(i.Color.ToLower())) || (!string.IsNullOrEmpty(i.Description) && searchFor.ToLower().Contains(i.Description.ToLower())) || (!string.IsNullOrEmpty(i.OtherFeatures) && searchFor.ToLower().Contains(i.OtherFeatures.ToLower()))).ToList();
 
                     var searchKeyWords = searchFor.Trim().Split(" ");
                     foreach (var item in itemsFromQuery)
@@ -107,23 +112,23 @@ namespace WafferAPIs.DAL.Repositories
 
                         foreach (var keyWord in searchKeyWords)
                         {
-                            if (item.Name.ToLower().Contains(keyWord.ToLower()) )
+                            if (!string.IsNullOrEmpty(item.Name)&&item.Name.ToLower().Contains(keyWord.ToLower()) )
                             
                                 item.SortPriority++;
                             
 
-                            if (item.Brand.ToLower().Contains(keyWord.ToLower()))
+                            if (!string.IsNullOrEmpty(item.Brand)&&item.Brand.ToLower().Contains(keyWord.ToLower()))
                                 item.SortPriority = item.SortPriority + 2;
 
 
-                            if (item.Description.ToLower().Contains(keyWord.ToLower()))
+                            if (!string.IsNullOrEmpty(item.Description)&&item.Description.ToLower().Contains(keyWord.ToLower()))
                                 item.SortPriority = item.SortPriority + 2;
 
 
-                            if (item.Color.ToLower().Contains(keyWord.ToLower()))
+                            if (!string.IsNullOrEmpty(item.Color)&&item.Color.ToLower().Contains(keyWord.ToLower()))
                                 item.SortPriority= item.SortPriority+3;
 
-                            if (item.OtherFeatures.ToLower().Contains(keyWord.ToLower()))
+                            if (!string.IsNullOrEmpty(item.OtherFeatures)&&item.OtherFeatures.ToLower().Contains(keyWord.ToLower()))
                                 item.SortPriority++;
                         }
 
@@ -357,6 +362,11 @@ namespace WafferAPIs.DAL.Repositories
             catch { throw; }
         }
 
+        public string getSubcategoryName(Guid id,List<SubCategoryData> list)
+        {
+            return list.Where(sub => sub.Id == id).FirstOrDefault().Name.ToLower();
+                
 
+        }
     }
 }

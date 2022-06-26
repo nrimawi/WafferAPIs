@@ -195,7 +195,7 @@ namespace WafferAPIs.Controllers
       //  [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Verify seller then send sms & email with password")]
         [HttpPost("verify-seller")]
-        public async Task<IActionResult> VerifySeller(Guid sellerId)
+        public async Task<IActionResult> VerifySeller(Guid sellerId,[FromQuery] int settings)
         {
 
             try
@@ -219,12 +219,13 @@ namespace WafferAPIs.Controllers
                 emailRequest.ToEmail = seller.Email;
                 emailRequest.Subject = "Waffer - Activate your account";
                 emailRequest.Name = seller.Name;
-                emailRequest.Link = "https://www.youtube.com/watch?v=Ik_OFtkTGtY&list=RDYhylTnTvBow&index=2";
+                emailRequest.Link = "http://localhost:4200/";
                 emailRequest.Password = password;
 
 
                 try
                 {
+                    if(settings >0)
                     await _emailSender.SendEmailAsync(emailRequest);
                 }
                 catch (Exception e) { throw new Exception("User verified but error while sending email due to " + e.Message); }
@@ -240,7 +241,8 @@ namespace WafferAPIs.Controllers
 
                 try
                 {
-                    await _smsSender.SendSMSAsync(smsRequest);
+                    if (settings > 1)
+                        await _smsSender.SendSMSAsync(smsRequest);
                 }
                 catch (Exception e) { throw new Exception("User verified and Email has been sent but error while sending sms due to " + e.Message); }
                 #endregion

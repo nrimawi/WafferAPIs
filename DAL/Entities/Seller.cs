@@ -43,7 +43,7 @@ namespace WafferAPIs.DAL.Entites
 
         public string Logo { get; set; }
         public string WebsiteLink { get; set; }
-        public string SocailMedaLink { get; set; }
+        public string SocialMediaLink { get; set; }
 
         public List<Item> Items { get; set; }
 
