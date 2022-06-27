@@ -28,12 +28,12 @@ namespace WafferAPIs.Controllers
         }
         [SwaggerOperation(Summary = "Get all items")]
         [HttpGet]
-        public async Task<ActionResult<List<ItemData>>> GetItems([FromQuery] string searchFor, [FromQuery] string sortBy)
+        public async Task<ActionResult<List<ItemData>>> GetItems([FromQuery] string searchFor, [FromQuery] string sortBy, [FromQuery] int count)
         {
             try
             {
                
-                return Ok(await _ItemRepository.GetItems(searchFor,sortBy));
+                return Ok(await _ItemRepository.GetItems(searchFor,sortBy,count));
 
             }
             catch (NullReferenceException e)

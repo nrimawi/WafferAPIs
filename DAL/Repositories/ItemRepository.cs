@@ -16,7 +16,7 @@ namespace WafferAPIs.DAL.Repositories
     public interface IItemRepository : IDisposable
     {
         Task<ItemData> CreateItem(ItemData ItemData);
-        Task<List<ItemData>> GetItems(string? searchFor, string? sortBy);
+        Task<List<ItemData>> GetItems(string? searchFor, string? sortBy,int count);
         Task<ItemData> GetItemById(Guid id);
         Task DeleteItem(Guid id);
         Task<List<ItemData>> GetItemsBySeller(Guid sellerId);
@@ -90,7 +90,7 @@ namespace WafferAPIs.DAL.Repositories
                 throw;
             }
         }
-        public async Task<List<ItemData>> GetItems(string? searchFor, string? sortBy)
+        public async Task<List<ItemData>> GetItems(string? searchFor, string? sortBy,int count)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace WafferAPIs.DAL.Repositories
                 #endregion
 
 
-                return itemsFromQuery;
+                return itemsFromQuery.GetRange(0,count);
             }
             catch
             {
