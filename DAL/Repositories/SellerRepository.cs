@@ -254,6 +254,7 @@ namespace WafferAPIs.DAL.Repositories
                     throw new Exception("Seller is already verified try to login");
                 #endregion
                 _appDbContext.Sellers.Remove(seller);
+                await _appDbContext.SaveChangesAsync();
                 return _mapper.Map<SellerData>(seller);
             }
             catch { throw; }

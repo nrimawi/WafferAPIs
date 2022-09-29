@@ -232,7 +232,7 @@ namespace WafferAPIs.Controllers
                 #endregion
                 #region Create sms data and send req
                 SMSRequestData smsRequest = new SMSRequestData();
-                smsRequest.From = "Wffer";
+                smsRequest.From = "Waffer";
                 //   smsRequest.Text = $"Welcome to Waffer, your request has been accepted.Please login to activate your account. Your password is: { password}\n أهلاً بك في موقع وفر، تم قبول طلبك الرجاء تسجيل الدخول لتفعيل حسابك رقمك السري هو{password} ";
                 smsRequest.Text = $"Welcome to waffer, your request has been accepted.Please login to activate your account. Your password is: { password}";
 
@@ -264,14 +264,12 @@ namespace WafferAPIs.Controllers
       //  [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Reject seller then send sms with the reason")]
         [HttpPost("reject-seller")]
-        public async Task<IActionResult> RejectSeller(Guid sellerId, string reason)
+        public async Task<IActionResult> RejectSeller(Guid sellerId)
         {
 
             try
             {
 
-                if (reason == null || reason.Length == 0)
-                    reason = "Undefiend Reason";
 
                 #region reject seller
                 SellerData seller;
@@ -290,7 +288,7 @@ namespace WafferAPIs.Controllers
 
                 SMSRequestData smsRequest = new SMSRequestData();
                 smsRequest.From = "Waffer";
-                smsRequest.Text = $"Your registration request at Waffer was decliend due to: {reason}, please try to register again!";
+                smsRequest.Text = $"Your registration request at Waffer was decliend, please try to register again with correct data!";
 
 
                 smsRequest.To = "+972" + seller.ContactPhoneNumber.ToString().Substring(1);

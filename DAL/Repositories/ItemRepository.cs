@@ -152,7 +152,9 @@ namespace WafferAPIs.DAL.Repositories
                 #endregion
 
 
+                if(itemsFromQuery.Count>count && count !=0)
                 return itemsFromQuery.GetRange(0,count);
+                return itemsFromQuery;
             }
             catch
             {
